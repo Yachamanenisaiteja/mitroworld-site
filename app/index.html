@@ -1,0 +1,1243 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MITRO — Web</title><link rel="icon" href="/assets/favicon.png"><meta name="theme-color" content="#4F46E5"><link rel="manifest" href="/app/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="MITRO">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--p:#4F46E5;--ps:#EEF2FF;--ink:#111827;--mut:#6B7280;--bd:#E5E7EB;--card:#F3F4F6;--chat:#F5F5FB}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--ink);background:#fff;height:100dvh;overflow:hidden}
+button{font:inherit;cursor:pointer;color:inherit}input,textarea{font:inherit}a{color:var(--p)}
+.center{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto}
+.auth{width:100%;max-width:380px;text-align:center}.auth img{width:84px;height:84px;border-radius:22px}
+.auth h1{letter-spacing:.18em;font-size:34px;margin:16px 0 4px}.tag{color:var(--mut);margin:0 0 28px}
+.in{width:100%;padding:13px 15px;border:1px solid var(--bd);background:var(--card);border-radius:14px;font-size:16px;outline:none}.in:focus{border-color:var(--p);background:#fff}
+.btn{width:100%;margin-top:12px;padding:13px;border:0;border-radius:14px;background:var(--p);color:#fff;font-weight:700;font-size:16px}.btn:disabled{opacity:.5}
+.ghost{background:none;border:0;color:var(--p);font-weight:600;margin-top:12px}
+.small{color:var(--mut);font-size:13px;line-height:1.5}.err{color:#DC2626;font-size:14px;min-height:20px;margin-top:10px}
+.app{display:flex;height:100dvh}.rail{width:68px;background:#fff;border-right:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:8px}
+.rail button{width:48px;height:48px;border-radius:14px;border:0;background:none;font-size:21px;position:relative}.rail button.on{background:var(--ps)}
+.rail .dot{position:absolute;top:8px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--p)}
+.side{width:370px;border-right:1px solid var(--bd);display:flex;flex-direction:column;min-width:0}
+.top{display:flex;align-items:center;gap:8px;padding:16px 16px 10px}.top h2{flex:1;margin:0;font-size:24px}
+.ic{width:40px;height:40px;border-radius:50%;border:0;background:var(--card);display:inline-flex;align-items:center;justify-content:center;font-size:17px;flex:none}
+.chips{display:flex;gap:8px;padding:8px 16px}.chip{border:0;border-radius:99px;padding:6px 13px;background:var(--card);color:var(--mut);font-weight:700;font-size:13px}.chip.on{background:var(--ps);color:var(--p)}
+.list{overflow:auto;flex:1}.row{display:flex;gap:12px;align-items:center;padding:9px 16px;cursor:pointer;position:relative}.row:hover,.row.on{background:var(--card)}
+.av{width:48px;height:48px;border-radius:50%;background:var(--ps);color:var(--p);display:flex;align-items:center;justify-content:center;font-weight:700;flex:none;overflow:hidden;font-size:18px}.av img{width:100%;height:100%;object-fit:cover}
+.ring{padding:2px;border-radius:50%;border:2.5px solid var(--p)}.ring.seen{border-color:var(--bd)}
+.meta{flex:1;min-width:0}.meta b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta span{color:var(--mut);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.rt{text-align:right;font-size:12px;color:var(--mut);display:flex;flex-direction:column;align-items:flex-end;gap:4px}.badge{background:var(--p);color:#fff;border-radius:10px;font-size:11px;padding:2px 7px;font-weight:700}
+.more{opacity:0;border:0;background:none;font-size:18px;padding:4px}.row:hover .more{opacity:1}
+.main{flex:1;display:flex;flex-direction:column;background:var(--chat);min-width:0}.empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--mut);text-align:center;padding:24px}
+.hdr{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fff;border-bottom:1px solid var(--bd)}.hdr .meta span{font-size:12.5px}.back{display:none!important}
+.banner{background:var(--ps);color:var(--p);font-size:12.5px;text-align:center;padding:6px}
+.msgs{flex:1;overflow:auto;padding:14px 18px;display:flex;flex-direction:column;gap:5px}
+.b{max-width:min(72%,560px);padding:8px 12px;border-radius:18px;background:#fff;box-shadow:0 1px 1px rgba(0,0,0,.06);white-space:pre-wrap;word-wrap:break-word;line-height:1.42;cursor:pointer;position:relative}
+.b.me{align-self:flex-end;background:var(--p);color:#fff}.b .t{display:block;font-size:11px;opacity:.7;margin-top:2px;text-align:right}.b.sys{align-self:center;background:#fff;border:1px solid var(--ps);max-width:90%;cursor:default}
+.b .who{font-size:12px;font-weight:700;color:var(--p);display:block;margin-bottom:2px}.b.me .who{display:none}
+.q{border-left:3px solid var(--p);background:rgba(79,70,229,.08);border-radius:8px;padding:5px 8px;margin-bottom:5px;font-size:13px}.b.me .q{border-color:#fff;background:rgba(255,255,255,.18)}
+.b img.ph{max-width:100%;max-height:320px;border-radius:12px;display:block}.b audio{width:250px;max-width:100%}
+.poll b{display:block;margin-bottom:6px}.opt{display:block;width:100%;text-align:left;border:1px solid var(--bd);background:#fff;color:var(--ink);border-radius:10px;padding:7px 10px;margin:5px 0;position:relative;overflow:hidden}
+.opt i{position:absolute;inset:0 auto 0 0;background:var(--ps);z-index:0}.opt span{position:relative;z-index:1;display:flex;justify-content:space-between;gap:8px}.opt.mine{border-color:var(--p)}
+.replybar{display:flex;align-items:center;gap:10px;background:#fff;border-top:1px solid var(--bd);padding:8px 14px;font-size:13px}.replybar div{flex:1;border-left:3px solid var(--p);padding-left:8px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.comp{display:flex;gap:8px;padding:10px 12px;background:#fff;border-top:1px solid var(--bd);align-items:flex-end}.comp textarea{flex:1;resize:none;border:1px solid var(--bd);border-radius:22px;padding:11px 16px;outline:none;max-height:140px;background:var(--card)}
+.send{width:46px;height:46px;border-radius:50%;border:0;background:var(--p);color:#fff;font-size:18px;flex:none}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-start;justify-content:center;padding:50px 14px;z-index:20;overflow:auto}.sheet{background:#fff;border-radius:18px;width:100%;max-width:430px;padding:18px}
+.sheet h3{margin:0 0 12px}.act{display:flex;gap:12px;align-items:center;width:100%;border:0;background:none;padding:12px 6px;border-radius:10px;text-align:left;font-size:15.5px}.act:hover{background:var(--card)}
+.pick{display:inline-flex;align-items:center;gap:6px;background:var(--ps);color:var(--p);border-radius:99px;padding:4px 10px;margin:3px;font-size:13px;font-weight:600}
+.story{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;color:#fff;background:#000}.bars{display:flex;gap:4px;padding:10px 10px 0}.bars div{flex:1;height:3px;background:rgba(255,255,255,.35);border-radius:2px;overflow:hidden}.bars i{display:block;height:100%;background:#fff;width:0}
+.story .sh{display:flex;align-items:center;gap:10px;padding:10px 14px}.story .sc{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;font-size:30px;font-weight:700;text-align:center;white-space:pre-wrap}.story .sc img{max-width:100%;max-height:100%;object-fit:contain}
+.story .cap{text-align:center;padding:12px 16px 26px;font-size:16px}
+.colors{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.colors button{width:30px;height:30px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--bd)}.colors button.on{box-shadow:0 0 0 3px var(--p)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:40}
+@media(max-width:820px){.rail{position:fixed;bottom:0;left:0;right:0;width:auto;height:62px;flex-direction:row;justify-content:space-around;border-right:0;border-top:1px solid var(--bd);padding:6px;z-index:5}
+.side{width:100%;border-right:0;padding-bottom:62px}.app.chatting .side,.app.chatting .rail{display:none}.app:not(.chatting) .main{display:none}.back{display:inline-flex!important}.more{opacity:1}}
+
+html.dark{--ink:#E5E7EB;--mut:#9CA3AF;--bd:#2A2D3A;--card:#1C1F2A;--chat:#0F1117;--ps:#26244A}
+html.dark body,html.dark .rail,html.dark .hdr,html.dark .comp,html.dark .sheet,html.dark .replybar,html.dark .side{background:#151821;color:var(--ink)}
+html.dark .b{background:#1E2230;color:var(--ink)}html.dark .b.me{background:var(--p);color:#fff}html.dark .b.sys{background:#1E2230}
+html.dark .in,html.dark .comp textarea{background:#1C1F2A;color:var(--ink)}html.dark .in:focus{background:#151821}
+html.dark .opt{background:#1C1F2A;color:var(--ink)}html.dark .daytag{background:#1E2230!important}
+.rx{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}.rx button{border:1px solid var(--bd);background:var(--card);border-radius:99px;padding:1px 8px;font-size:13px;color:var(--ink)}.rx button.mine{border-color:var(--p);background:var(--ps)}
+.b.me .rx button{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.35);color:#fff}.b.me .rx button.mine{background:rgba(255,255,255,.35)}
+.emojis{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.emojis button{font-size:24px;border:0;background:var(--card);border-radius:12px;width:44px;height:44px}
+.pinbar{display:flex;align-items:center;gap:10px;background:var(--card);border-bottom:1px solid var(--bd);padding:7px 14px;font-size:13px;cursor:pointer}.pinbar div{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:3px solid var(--p);padding-left:8px}
+.searchbar{display:flex;gap:8px;padding:8px 12px;background:var(--card);border-bottom:1px solid var(--bd)}.hl{background:#FDE68A;color:#111;border-radius:3px}
+.tick{margin-left:4px;letter-spacing:-3px}.tick.read{color:#93C5FD}.b:not(.me) .tick{display:none}
+.online{color:#10B981!important}.typing{color:var(--p)!important;font-style:italic}
+.attach{width:46px;height:46px;border-radius:50%;border:0;background:var(--card);font-size:19px;flex:none}.rec{background:#EF4444!important;color:#fff}
+.chbar{padding:12px;text-align:center;background:var(--card);border-top:1px solid var(--bd);display:flex;gap:10px;justify-content:center}
+.chbar button{border:0;border-radius:12px;padding:10px 18px;font-weight:700;background:var(--ps);color:var(--p)}
+.menu-grid button{display:flex;gap:12px;align-items:center;width:100%;border:0;background:none;padding:13px 6px;border-radius:10px;text-align:left;font-size:15.5px}.menu-grid button:hover{background:var(--card)}
+.toggle{display:flex;justify-content:space-between;align-items:center;padding:10px 0}
+:root{--surface:#fff}html.dark{--surface:#151821}
+.rail{display:none!important}.side{position:relative;background:var(--surface)}
+.tabbar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;background:var(--card);border:1px solid var(--bd);border-radius:40px;padding:5px;gap:2px;box-shadow:0 8px 28px rgba(0,0,0,.18);z-index:6}
+.tabbar button{border:0;background:none;border-radius:30px;padding:6px 20px;display:flex;flex-direction:column;align-items:center;font-size:12px;font-weight:600;color:var(--ink);gap:1px;position:relative}.tabbar button i{font-style:normal;font-size:22px;line-height:1.1}.tabbar button.on{background:var(--ps);color:var(--p)}
+.tabbar .dot{position:absolute;top:4px;right:16px;width:9px;height:9px;border-radius:50%;background:#EF4444}
+.ttop{display:flex;align-items:center;gap:8px;padding:14px 16px 4px}.ttop h2{flex:1;text-align:center;margin:0;font-size:20px}
+.pillbtn{border:0;background:var(--card);border-radius:22px;padding:10px 18px;font-weight:600;font-size:16px}.pillbtn.on{background:var(--p);color:#fff}
+.roundbtn{width:44px;height:44px;border-radius:50%;border:0;background:var(--card);font-size:19px;flex:none}.roundbtn.blue{background:var(--p);color:#fff}
+.stories{display:flex;gap:16px;overflow-x:auto;padding:10px 16px 8px;scrollbar-width:none}.story-i{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;width:74px;cursor:pointer;flex:none;position:relative}
+.story-i .ring{padding:3px;border-width:2.5px}.story-i .av{width:62px;height:62px;font-size:23px}.story-i span{max-width:74px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.plusb{position:absolute;right:2px;top:46px;width:22px;height:22px;border-radius:50%;background:var(--p);color:#fff;border:2px solid var(--surface);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700}
+.searchpill{display:block;margin:6px 16px 6px;width:calc(100% - 32px);border-radius:24px!important;text-align:center;padding:11px 14px!important}
+.list{padding-bottom:96px}.list .row{padding:8px 16px}.list .row .av{width:58px;height:58px;font-size:21px}
+.av.g{color:#fff}.side.editing .more{opacity:1}
+.group{background:var(--card);border-radius:18px;margin:12px 16px;overflow:hidden}.grow{display:flex;align-items:center;gap:14px;padding:12px 14px;cursor:pointer;border-bottom:1px solid var(--bd)}.grow:last-child{border-bottom:0}.grow:hover{filter:brightness(.97)}
+.grow .gi{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex:none}.grow b{flex:1;font-weight:500}.grow .gv{color:var(--mut);font-size:15px}.grow .chev{color:var(--mut);font-size:20px}
+.phead{text-align:center;padding:10px 16px 2px}.phead .av{width:96px;height:96px;font-size:36px;margin:0 auto 10px}.phead h2{margin:0;font-size:24px}
+.pagescroll{overflow:auto;flex:1;padding-bottom:96px}
+.auth2{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:radial-gradient(1200px 600px at 50% -10%,rgba(79,70,229,.18),transparent 60%),var(--surface);overflow:auto}
+.auth2-card{width:100%;max-width:400px;text-align:center;position:relative}.auth2-logo img{width:110px;height:110px;border-radius:30px;box-shadow:0 18px 40px rgba(79,70,229,.35);animation:pop .6s ease}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+.auth2-title{letter-spacing:.2em;font-size:36px;margin:18px 0 6px;color:var(--ink)}.auth2-slides{position:relative;height:150px;margin-top:8px}
+.auth2-slide{position:absolute;inset:0;opacity:0;transition:opacity .5s;color:var(--ink)}.auth2-slide.on{opacity:1}.auth2-slide b{font-size:18px}.auth2-slide p{color:var(--mut);margin:6px 0 0;line-height:1.45}
+.auth2-emoji{font-size:44px;margin-bottom:6px}.auth2-dots{display:flex;gap:6px;justify-content:center;margin:6px 0 22px}.auth2-dots i{width:7px;height:7px;border-radius:50%;background:var(--bd)}.auth2-dots i.on{background:var(--p);width:20px;border-radius:4px}
+.auth2-btn{border-radius:14px;padding:15px;font-size:17px}.gbtn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;box-sizing:border-box;margin-top:10px;padding:14px;border-radius:14px;border:1.5px solid #dadce0;background:#fff;color:#1f1f1f;font:600 16px/1 inherit;font-family:inherit;cursor:pointer}.gbtn:active{transform:scale(.98)}.gbtn:disabled{opacity:.6}.auth2-or{display:flex;align-items:center;gap:10px;color:var(--mut);font-size:13px;margin:16px 0 4px}.auth2-or:before,.auth2-or:after{content:'';flex:1;height:1px;background:var(--line,#e5e7eb)}
+.pvmodal{padding:0;align-items:stretch}.pvsheet{max-width:560px;border-radius:0;min-height:100%;background:var(--surface,#fff);padding:0 0 30px;box-sizing:border-box}.pvsheet .group{margin:10px 16px}.pvtop{display:flex;align-items:center;justify-content:space-between;padding:12px 10px;position:sticky;top:0;background:inherit;z-index:1}.pvtop h3{margin:0;font-size:18px}.pvtop span{width:40px}.pvtop .ic{font-size:26px;width:40px}.pvh{margin:22px 32px 6px;font-size:13px;color:var(--mut);letter-spacing:.3px}.pvnote{margin:6px 32px 0;font-size:13px;color:var(--mut);line-height:1.45}
+.lockscr{position:fixed;inset:0;z-index:100;background:var(--surface,#fff);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px}.lockscr img{border-radius:18px}.lockscr h2{margin:6px 0;color:var(--ink)}.lockscr input{font-size:28px;letter-spacing:12px;text-align:center;width:200px;padding:12px;border-radius:14px;border:1.5px solid var(--bd);background:var(--card,#fff);color:var(--ink)}.auth2-h{margin:4px 0 8px;font-size:26px;color:var(--ink)}.auth2-sub{color:var(--mut);margin:0 0 20px;line-height:1.5}
+.auth2-in{font-size:18px;padding:15px 16px;text-align:center}.auth2-code{letter-spacing:.15em}.auth2-ghostbtn{background:var(--card)!important;color:var(--p)!important}
+.auth2-back{position:absolute;left:-4px;top:-8px;border:0;background:none;color:var(--p);font-size:17px;font-weight:600}.auth2-foot{color:var(--mut);font-size:12.5px;margin-top:26px;text-align:center}
+.b.stk{background:none!important;box-shadow:none!important;padding:2px 4px}.b.stk .t{color:var(--mut)}.jumbo{font-size:64px;line-height:1.15;display:block}
+.epanel{border-top:1px solid var(--bd);background:var(--surface);max-height:300px;display:flex;flex-direction:column}.etabs{display:flex;gap:6px;padding:8px 10px 4px;overflow-x:auto}.etabs button{border:0;background:var(--card);border-radius:14px;padding:6px 12px;font-weight:600;color:var(--ink);white-space:nowrap}.etabs button.on{background:var(--ps);color:var(--p)}
+.egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px;padding:6px 10px 12px;overflow:auto}.egrid button{border:0;background:none;font-size:28px;padding:4px;border-radius:10px}.egrid button:hover{background:var(--card)}.egrid.big{grid-template-columns:repeat(auto-fill,minmax(76px,1fr))}.egrid.big button{font-size:54px}
+.phead .av{cursor:pointer}.camb{display:inline-block;margin-top:-6px;color:var(--p);font-weight:600;cursor:pointer}
+.shield{margin-top:6px;border-radius:10px;padding:6px 9px;font-size:12.5px;cursor:pointer;line-height:1.35;white-space:normal}.s-scam{background:#FEE2E2;color:#991B1B}.s-sus{background:#FEF3C7;color:#92400E}
+.ulink{color:inherit;text-decoration:underline;word-break:break-all}
+*{-webkit-tap-highlight-color:transparent}button,.row,.b,.grow,.chip,.story-i{touch-action:manipulation}
+.list,.msgs,.pagescroll,.egrid,.stories{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.list .row{content-visibility:auto;contain-intrinsic-size:auto 74px}
+.modal{animation:mfade .16s ease}.sheet{animation:mup .22s cubic-bezier(.2,.8,.2,1)}@keyframes mfade{from{opacity:0}}@keyframes mup{from{transform:translateY(18px);opacity:.5}}
+button:active,.row:active,.grow:active{transform:scale(.985)}button,.row,.grow{transition:transform .08s ease,background-color .15s ease}
+.main{animation:mfade .15s ease}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.nbanner{display:flex;align-items:center;gap:8px;margin:8px 10px 0;padding:10px 12px;border-radius:14px;background:#EEF2FF;color:#3730A3;font-size:13.5px;font-weight:600}.nbanner span{flex:1}.nbanner .on{border:0;background:var(--p);color:#fff;border-radius:10px;padding:7px 12px;font-weight:700}.nbanner .x{border:0;background:none;color:inherit;font-size:16px}
+.callv,.callin{position:fixed;inset:0;z-index:9999;background:radial-gradient(circle at 50% 30%,#1e3a8a,#0b1020 70%);color:#fff;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top) + 48px) 20px calc(env(safe-area-inset-bottom) + 36px)}
+.callv #rv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;display:none}.callv.video.live #rv{display:block}
+.callv #lv{position:absolute;right:14px;top:calc(env(safe-area-inset-top) + 14px);width:104px;height:150px;object-fit:cover;border-radius:14px;border:2px solid rgba(255,255,255,.6);display:none;transform:scaleX(-1);z-index:2}.callv.video #lv{display:block}
+.ctop{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}.ctop b{font-size:26px}.ctop span{opacity:.85;font-size:16px}.ctop small{opacity:.6}
+.callv.video.live .ctop{flex-direction:row;align-self:flex-start;background:rgba(0,0,0,.35);padding:8px 14px;border-radius:30px}.callv.video.live .ctop .av,.callv.video.live .ctop small{display:none}.callv.video.live .ctop b{font-size:16px}
+.cbar{position:relative;z-index:2;display:flex;gap:22px}.cbar button{width:64px;height:64px;border-radius:50%;border:0;font-size:26px;background:rgba(255,255,255,.18);color:#fff}.cbar button.off{background:#fff;color:#111}.cbar .end{background:#EF4444;transform:rotate(135deg)}.cbar .acc{background:#22C55E;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+</style></head><body><div id="root"></div>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const sb = createClient('https://odppisawrxztprjqzxga.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9kcHBpc2F3cnh6dHByanF6eGdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ5NDU4NjgsImV4cCI6MjExMDUyMTg2OH0.kPS_vn7dZxnw0X7KiCktqsY8V4r0cLid8FoqWzeMIQs', { auth: { persistSession: true, storageKey: 'mitro-web-auth', detectSessionInUrl: true } });
+const $ = (h) => { const t = document.createElement('template'); t.innerHTML = h.trim(); return t.content.firstChild; };
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const root = document.getElementById('root');
+const EMOJI = ['👍', '❤️', '😂', '😮', '😢', '🙏', '🔥', '🎉', '👏', '💯', '😍', '🤝'];
+const S = { me: null, prof: null, tab: 'chats', filter: 'all', convs: [], cur: null, msgs: new Map(), polls: new Map(), votes: [], reply: null, people: new Map(),
+  reacts: [], edits: new Map(), online: new Set(), typing: new Map(), search: '', convChan: null, presence: null };
+const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
+const applyTheme = () => document.documentElement.classList.toggle('dark', store.get('mitro-theme') === 'dark' || (!store.get('mitro-theme') && matchMedia('(prefers-color-scheme: dark)').matches));
+applyTheme();
+const nm = (p) => p?.display_name || (p?.username ? '@' + p.username : 'MITRO user');
+const PAL = [['#FF885E', '#FF516A'], ['#FFCD6A', '#FFA85C'], ['#82B1FF', '#665FFF'], ['#A0DE7E', '#54CB68'], ['#53EDD6', '#28C9B7'], ['#72D5FD', '#2A9EF1'], ['#E0A2F3', '#D669ED']];
+const grad = (n) => { let h = 0; for (const ch of String(n || '?')) h = (h * 31 + ch.codePointAt(0)) >>> 0; const [a, b] = PAL[h % PAL.length]; return `background:linear-gradient(180deg,${a},${b})`; };
+const initials = (n) => String(n || '?').trim().split(/\s+/).slice(0, 2).map((w) => w[0] || '').join('').toUpperCase() || '?';
+const av = (n, url, size, icon) => `<div class="av${url ? '' : ' g'}" style="${size ? `width:${size}px;height:${size}px;` : ''}${url ? '' : icon === '🔖' ? 'background:linear-gradient(180deg,#72D5FD,#2A9EF1)' : grad(n)}">${icon ? icon : url ? `<img src="${esc(url)}" alt="">` : esc(initials(n))}</div>`;
+const tm = (iso) => { const d = new Date(iso), n = new Date(); if (d.toDateString() === n.toDateString()) return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); const y = new Date(n); y.setDate(n.getDate() - 1); return d.toDateString() === y.toDateString() ? 'Yesterday' : d.toLocaleDateString([], { day: 'numeric', month: 'short' }); };
+const ago = (iso) => { const m = Math.max(1, Math.round((Date.now() - Date.parse(iso)) / 60000)); return m < 60 ? m + ' min ago' : Math.round(m / 60) + ' h ago'; };
+const bodyOf = (m) => S.edits.get(m.id)?.body ?? m.body;
+const preview = (m) => !m ? 'No messages yet' : m.deleted_by_sender ? '🚫 Message deleted' : m.redacted_at ? 'Message removed' : m.e2ee ? '🔒 Encrypted message' : ({ image: '📷 Photo', file: '📎 ' + (m.file_name || 'File'), voice: '🎙️ Voice message', poll: '📊 ' + (m.body || 'Poll'), ai: '✨ AI meeting notes' })[m.kind] || m.body;
+const toast = (t) => { const e = $(`<div class="toast">${esc(t)}</div>`); document.body.appendChild(e); setTimeout(() => e.remove(), 2800); };
+const modal = (html) => { const m = $(`<div class="modal"><div class="sheet">${html}</div></div>`); m.onclick = (e) => e.target === m && m.remove(); document.body.appendChild(m); return m; };
+const urlCache = new Map();
+async function signed(bucket, path) { const k = bucket + path; if (urlCache.has(k)) return urlCache.get(k); const { data } = await sb.storage.from(bucket).createSignedUrl(path, 3000); urlCache.set(k, data?.signedUrl || ''); return data?.signedUrl || ''; }
+const friendly = (m) => /GUEST_LIMIT/.test(m) ? 'Guests can try MITRO with Saved Messages, groups and channels. ' + (m.split('GUEST_LIMIT: ')[1] || 'Sign in with email or Google to do this.').replace(/^./, (c) => c.toUpperCase()) + '.' : /PRIVACY_MESSAGES/.test(m) ? 'This person only accepts messages from their contacts.' : /SCAN_UNAVAILABLE/.test(m) ? 'Photo sharing switches on once the photo safety scanner is connected — coming soon.' : /ADULT_CONTENT/.test(m) ? 'That photo was blocked: adult content is not allowed on MITRO.' : /banned|guideline|not allowed|blocked term/i.test(m) ? 'That breaks the Community Guidelines.' : /rate|too many/i.test(m) ? 'Too fast — please wait a moment.' : /row-level security/i.test(m) ? "You can't post here." : m;
+const isAdmin = (c) => c?.mine?.role === 'admin';
+const kindIcon = (c) => c.kind === 'saved' ? '🔖' : c.kind === 'channel' ? '📢' : null;
+
+// ---------- Sign in ----------
+const G_BTN = `<button type="button" class="gbtn" data-google><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg><span>Continue with Google</span></button>`;
+async function googleOn(){ if (window.__gOn !== undefined) return window.__gOn; try { const r = await fetch('https://odppisawrxztprjqzxga.supabase.co/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent(location.origin + '/app/'), { redirect: 'manual' }); window.__gOn = r.type === 'opaqueredirect' || (r.status >= 300 && r.status < 400); } catch { window.__gOn = true; } return window.__gOn; }
+function wireGoogle(){ googleOn().then((on) => { if (!on) root.querySelectorAll('[data-google]').forEach((b) => { const s = b.nextElementSibling; b.remove(); if (s && /\bor\b/i.test(s.textContent || '') && s.textContent.length < 20) s.remove(); }); }); root.querySelectorAll('[data-google]').forEach(b => b.onclick = async () => { b.disabled = true; b.querySelector('span').textContent = 'Opening Google…'; const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + '/app/', queryParams: { prompt: 'select_account' } } }); if (error) { b.disabled = false; b.querySelector('span').textContent = 'Continue with Google'; toast(/not enabled|provider/i.test(error.message) ? 'Google sign-in is being switched on — please use email for now' : error.message); } }); }
+function signIn(step = 0, email = '') {
+  const h = new URLSearchParams(location.hash.slice(1)); const linkErr = h.get('error_description');
+  if (linkErr) history.replaceState(null, '', location.pathname);
+  const wrap = (inner) => `<div class="auth2"><div class="auth2-card">${inner}</div><p class="auth2-foot">🔒 No passwords · Zero tolerance for adult (18+) content · <a href="/terms.html" target="_blank">Terms</a> · <a href="/privacy.html" target="_blank">Privacy</a></p></div>`;
+  if (step === 0) {
+    const slides = [['💬', 'Fast & simple', 'Chats, groups and channels that sync instantly on phone and web.'], ['🔒', 'Private by design', 'End-to-end encryption, disappearing messages and a tamper-proof history.'], ['✨', 'More than chat', 'Stories, polls, reactions, Saved Messages, video calls and AI meeting notes.']];
+    root.innerHTML = wrap(`<div class="auth2-logo"><img src="/assets/mitro-mark.svg" alt=""></div><h1 class="auth2-title">MITRO</h1>
+      <div class="auth2-slides">${slides.map((s, i) => `<div class="auth2-slide${i ? '' : ' on'}"><div class="auth2-emoji">${s[0]}</div><b>${s[1]}</b><p>${s[2]}</p></div>`).join('')}</div>
+      <div class="auth2-dots">${slides.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>
+      ${linkErr ? `<div class="err">${esc(linkErr.replace(/\+/g, ' '))} — please request a new link.</div>` : ''}
+      <button class="btn auth2-btn" id="go">Start Messaging</button>${G_BTN}<button type="button" class="ghost" id="guest" style="margin-top:6px">Try as guest</button><p class="small">Your People. Your World.</p>`);
+    wireGoogle();
+    root.querySelector('#guest').onclick = async (ev) => { const b = ev.currentTarget; b.disabled = true; b.textContent = 'Starting…'; const { error } = await sb.auth.signInAnonymously(); if (error) { b.disabled = false; b.textContent = 'Try as guest'; toast(/anonymous|disabled|not enabled/i.test(error.message) ? 'Guest mode is coming soon — please sign in with email or Google' : error.message); } };
+    let k = 0; const tick = setInterval(() => { if (!root.querySelector('.auth2-slide')) return clearInterval(tick); k = (k + 1) % slides.length; root.querySelectorAll('.auth2-slide').forEach((el, i) => el.classList.toggle('on', i === k)); root.querySelectorAll('.auth2-dots i').forEach((el, i) => el.classList.toggle('on', i === k)); }, 3200);
+    root.querySelector('#go').onclick = () => { clearInterval(tick); signIn(1); };
+    return;
+  }
+  if (step === 1) {
+    root.innerHTML = wrap(`<button class="auth2-back" id="bk">‹ Back</button><div class="auth2-emoji">✉️</div><h2 class="auth2-h">Your email</h2><p class="auth2-sub">We'll send you a sign-in link and code. No password needed.</p>
+      <form id="f"><input class="in auth2-in" id="e" type="email" placeholder="name@example.com" autocomplete="email" value="${esc(email)}" required autofocus><button class="btn auth2-btn">Next</button></form><div class="err" id="er"></div><div class="auth2-or">or</div>${G_BTN}<button type="button" class="ghost" id="pwl" style="margin-top:8px">Sign in with password</button>
+      <p class="small">By continuing you agree to the <a href="/child-safety.html" target="_blank">Community Guidelines</a>.</p>`);
+    root.querySelector('#bk').onclick = () => signIn(0); wireGoogle();
+    root.querySelector('#pwl').onclick = () => pwSignIn(root.querySelector('#e').value.trim());
+    const f = root.querySelector('#f');
+    f.onsubmit = async (ev) => {
+      ev.preventDefault(); const er = root.querySelector('#er'); er.textContent = ''; const go = f.querySelector('button'); go.disabled = true; go.textContent = 'Sending…';
+      const em = f.querySelector('#e').value.trim().toLowerCase();
+      const { error } = await sb.auth.signInWithOtp({ email: em, options: { shouldCreateUser: true, emailRedirectTo: location.origin + '/app/' } });
+      go.disabled = false; go.textContent = 'Next';
+      if (error) return (er.textContent = /rate limit/i.test(error.message) ? 'Too many sign-in emails right now. Please try again in a few minutes.' : error.message);
+      signIn(2, em);
+    };
+    return;
+  }
+  const domain = email.split('@')[1] || '';
+  const inbox = /gmail/.test(domain) ? 'https://mail.google.com/mail/u/0/#inbox' : /outlook|hotmail|live/.test(domain) ? 'https://outlook.live.com/mail/' : /yahoo|ymail/.test(domain) ? 'https://mail.yahoo.com/' : /icloud|me\.com/.test(domain) ? 'https://www.icloud.com/mail' : '';
+  root.innerHTML = wrap(`<button class="auth2-back" id="bk">‹ Back</button><div class="auth2-emoji">📬</div><h2 class="auth2-h">Check your email</h2>
+    <p class="auth2-sub">We sent a sign-in link to <b>${esc(email)}</b>.<br>Tap the link on this device — or type the code from the email.</p>
+    ${inbox ? `<a class="btn auth2-btn" style="display:block;text-decoration:none;text-align:center;box-sizing:border-box" href="${inbox}" target="_blank" rel="noopener">Open ${/gmail/.test(domain) ? 'Gmail' : 'my inbox'}</a>` : ''}
+    <form id="f" style="margin-top:14px"><input class="in auth2-in auth2-code" id="c" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="Code (if your email has one)"><button class="btn auth2-btn auth2-ghostbtn">Verify code</button></form>
+    <div class="err" id="er"></div><button class="ghost" id="rs" disabled>Resend in 60s</button>`);
+  root.querySelector('#bk').onclick = () => signIn(1, email);
+  let left = 60; const rs = root.querySelector('#rs'); const t = setInterval(() => { if (!document.body.contains(rs)) return clearInterval(t); left--; rs.textContent = left > 0 ? `Resend in ${left}s` : 'Resend email'; rs.disabled = left > 0; if (left <= 0) clearInterval(t); }, 1000);
+  rs.onclick = async () => { rs.disabled = true; const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: location.origin + '/app/' } }); toast(error ? (/rate limit/i.test(error.message) ? 'Please wait a few minutes before resending' : error.message) : 'Sent again'); signIn(2, email); };
+  root.querySelector('#f').onsubmit = async (ev) => {
+    ev.preventDefault(); const code = root.querySelector('#c').value.trim(); if (!code) return;
+    const { error } = await sb.auth.verifyOtp({ email, token: code, type: 'email' });
+    if (error) root.querySelector('#er').textContent = 'Wrong or expired code. Tap the link in the email instead, or resend.';
+  };
+}
+
+async function gate() {
+  const { data } = await sb.from('profiles').select('*').eq('id', S.me.id).single();
+  S.prof = data; showLock();
+  try { S.priv = (await sb.from('user_privacy').select('*').eq('user_id', S.me.id).maybeSingle()).data; } catch { S.priv = null; }
+  if (data && !data.accepted_guidelines_at) {
+    root.innerHTML = `<div class="center"><div class="auth" style="text-align:left"><h2>Welcome to MITRO</h2><p>MITRO is safe for everyone. By continuing you agree:</p>
+    <ul style="line-height:1.7"><li>No sexual or adult (18+) content — ever.</li><li>No harassment, hate or threats.</li><li>No content that harms children. We report it to the authorities.</li><li>Breaking these rules gets your account suspended.</li></ul>
+    <label style="display:block;margin:14px 0 6px;font-weight:600">Your name</label><input class="in" id="n" value="${esc(data.display_name || '')}" maxlength="40" placeholder="How people see you">
+    <button class="btn" id="ok">I agree — continue</button><div class="err" id="er"></div><button class="ghost" id="out">Sign out</button></div></div>`;
+    root.querySelector('#out').onclick = () => sb.auth.signOut();
+    root.querySelector('#ok').onclick = async () => {
+      const n = root.querySelector('#n').value.trim(); if (n) await sb.from('profiles').update({ display_name: n }).eq('id', S.me.id);
+      const { error } = await sb.rpc('accept_guidelines'); if (error) return (root.querySelector('#er').textContent = error.message);
+      gate();
+    };
+    return;
+  }
+  shell();
+}
+
+// ---------- Shell ----------
+function shell() {
+  root.innerHTML = `<div class="app" id="app"><nav class="rail"></nav>
+  <aside class="side" id="side"><div id="page" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+  <div class="tabbar"><button data-t="contacts"><i>👤</i>Contacts</button><button data-t="chats"><i>💬</i>Chats<span class="dot" id="ud" hidden></span></button><button data-t="settings"><i>⚙️</i>Settings</button></div></aside>
+  <section class="main" id="main"><div class="empty"><div><img src="/assets/mitro-mark.svg" width="76" alt=""><h3>MITRO</h3><p>Chats, groups, channels, stories, polls and more.<br>Pick a chat or tap ✎ to start.</p></div></div></section></div>`;
+  root.querySelectorAll('.tabbar button').forEach((b) => (b.onclick = () => setTab(b.dataset.t)));
+  setTab('chats');
+  sb.channel('live').on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, (p) => {
+    const m = p.new; if (!m?.id) return;
+    if (S.cur && m.conversation_id === S.cur.id) { S.msgs.set(m.id, m); S.typing.delete(m.sender_id); typingLine(); if (m.kind === 'poll') loadPolls().then(renderMsgs); else renderMsgs(p.eventType === 'INSERT'); markRead(); }
+    loadConvsSoon();
+  }).on('postgres_changes', { event: '*', schema: 'public', table: 'poll_votes' }, () => { if (S.cur) loadPolls().then(() => renderMsgs(false)); })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'message_reactions' }, () => extrasSoon())
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'message_edits' }, () => extrasSoon())
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'conversations' }, (p) => { if (S.cur && p.new.id === S.cur.id) { S.cur.pinned_message_id = p.new.pinned_message_id; S.cur.disappear_after = p.new.disappear_after; pinBar(); banner(); } })
+    .subscribe();
+  S.presence = sb.channel('online', { config: { presence: { key: S.me.id } } });
+  S.presence.on('presence', { event: 'sync' }, () => { S.online = new Set(Object.keys(S.presence.presenceState())); headerSub(); if (S.tab === 'chats') { clearTimeout(S._pr); S._pr = setTimeout(renderList, 300); } })
+    .subscribe((st) => { if (st === 'SUBSCRIBED' && S.prof?.show_last_seen !== false && (S.priv?.last_seen || 'everybody') === 'everybody') S.presence.track({ at: Date.now() }); });
+  setInterval(() => { if (S.cur && !document.hidden) refreshMembers(); }, 20000);
+}
+function setTab(t) {
+  S.tab = t; root.querySelectorAll('.tabbar button').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
+  root.querySelector('#side').classList.remove('editing');
+  t === 'chats' ? chatsSide() : t === 'contacts' ? contactsSide() : settingsSide();
+}
+const page = () => root.querySelector('#page');
+const grow = (icon, color, label, value, act) => `<div class="grow" data-act="${act}"><div class="gi" style="background:${color}">${icon}</div><b>${label}</b>${value ? `<span class="gv">${value}</span>` : ''}<span class="chev">›</span></div>`;
+function settingsSide() {
+  const dark = document.documentElement.classList.contains('dark');
+  page().innerHTML = `<div class="ttop"><button class="roundbtn" data-act="qr" title="Share my profile">🔗</button><h2>${esc(nm(S.prof))}</h2><button class="pillbtn" data-act="profile">Edit</button></div>
+  <div class="pagescroll"><div class="phead" data-act="photo">${av(nm(S.prof), S.prof?.avatar_url, 96)}<h2>${esc(nm(S.prof))}</h2><div class="small">${S.prof?.username ? '@' + esc(S.prof.username) + ' · ' : ''}${esc(S.me.email || '')}</div></div>
+  <div class="group">${grow('📷', '#2A9EF1', S.prof?.avatar_url ? 'Change Profile Photo' : 'Set Profile Photo', '', 'photo')}${S.prof?.avatar_url ? grow('🗑️', '#8E8E93', 'Remove Photo', '', 'rmphoto') : ''}${grow('👤', '#FF516A', 'My Profile', '', 'profile')}</div>
+  <div class="group">${grow('🔖', '#2A9EF1', 'Saved Messages', '', 'saved')}${grow('📢', '#8B5CF6', 'Channels', '', 'channels')}${grow('◎', '#10B981', 'My Story', '', 'story')}${grow('🗂️', '#38BDF8', 'Chat Folders', '', 'folders')}</div>
+  <div class="group">${grow('🔔', '#EF4444', 'Notifications and Sounds', '', 'notif')}${grow('🛡️', '#16A34A', 'Scam Shield', shieldOn() ? 'On' : 'Off', 'shield')}${grow('🔒', '#8E8E93', 'Privacy and Security', '', 'privacy')}${grow('💾', '#22C55E', 'Data and Storage', '', 'data')}${grow('🌗', '#0EA5E9', 'Appearance', dark ? 'Dark' : 'Light', 'appearance')}${grow('🌐', '#A855F7', 'Language', 'English', 'lang')}</div>
+  <div class="group">${grow('⭐', '#7C6CF5', 'MITRO Pro', '', 'pro')}${grow('📲', '#F59E0B', 'Install MITRO App', '', 'install')}${grow('🎁', '#14B8A6', 'Invite Friends', '', 'invite')}</div>
+  <div class="group">${grow('💬', '#F97316', 'Ask a Question', '', 'ask')}${grow('❓', '#3B82F6', 'MITRO FAQ', '', 'faq')}${grow('🛡️', '#6366F1', 'Community Guidelines', '', 'rules')}${grow('🚪', '#EF4444', 'Sign Out', '', 'signout')}</div>
+  <p class="small" style="text-align:center">MITRO · Your People. Your World.</p></div>`;
+  page().querySelectorAll('[data-act]').forEach((el) => (el.onclick = () => settingsAction(el.dataset.act)));
+}
+async function settingsAction(a) {
+  if (a === 'profile') return profileSheet();
+  if (a === 'photo') return setPhoto();
+  if (a === 'rmphoto') return removePhoto();
+  if (a === 'saved') return openSaved();
+  if (a === 'channels') { S.filter = 'channels'; return setTab('chats'); }
+  if (a === 'folders') { const m = modal(`<h3>🗂️ Chat Folders</h3><div class="menu-grid">${['all', 'unread', 'groups', 'channels', 'archived'].map((f) => `<button data-f="${f}">${({ all: '💬 All chats', unread: '🔵 Unread', groups: '👥 Groups', channels: '📢 Channels', archived: '🗂️ Archived' })[f]}</button>`).join('')}</div>`); m.querySelectorAll('[data-f]').forEach((b) => (b.onclick = () => { m.remove(); S.filter = b.dataset.f; setTab('chats'); })); return; }
+  if (a === 'story') return newStatus();
+  if (a === 'shield') return scamChecker();
+  if (a === 'appearance') { const m = modal(`<h3>🌗 Appearance</h3><div class="menu-grid"><button data-th="light">☀️ Light</button><button data-th="dark">🌙 Dark</button><button data-th="">📱 Same as device</button></div>`); m.querySelectorAll('[data-th]').forEach((b) => (b.onclick = () => { b.dataset.th ? store.set('mitro-theme', b.dataset.th) : localStorage.removeItem('mitro-theme'); applyTheme(); m.remove(); settingsSide(); })); return; }
+  if (a === 'privacy') return privacyPage();
+  if (a === '__old_privacy') {
+    const p = S.prof || {};
+    const m = modal(`<h3>🔒 Privacy and Security</h3>
+      <div class="toggle"><span>Show when I'm online</span><input type="checkbox" id="ls" ${p.show_last_seen !== false ? 'checked' : ''} style="width:22px;height:22px"></div>
+      <div class="toggle"><span>People can find me by name / username</span><input type="checkbox" id="se" ${p.searchable !== false ? 'checked' : ''} style="width:22px;height:22px"></div>
+      <p class="small">🔒 Chats with people who use the MITRO mobile app are end-to-end encrypted. Every message is sealed in a tamper-evident chain. Report or block anyone from a chat's ⋮ menu in the mobile app.</p><button class="btn" id="sv">Save</button>`);
+    m.querySelector('#sv').onclick = async () => { const patch = { show_last_seen: m.querySelector('#ls').checked, searchable: m.querySelector('#se').checked }; const { error } = await sb.from('profiles').update(patch).eq('id', S.me.id); if (error) return toast(error.message); Object.assign(S.prof, patch); m.remove(); toast('Saved'); if (!patch.show_last_seen) S.presence?.untrack(); else S.presence?.track({ at: Date.now() }); };
+    return;
+  }
+  if (a === 'notif') return notifSettings();
+  if (a === 'data') return modal(`<h3>💾 Data and Storage</h3><p class="small">Photos and files are stored privately and only shared with the chat they were sent to. Disappearing messages and deleted files are removed from our servers automatically.</p><p class="small">Delete your account at <a href="/delete-account.html">mitroworld.com/delete-account</a>.</p>`);
+  if (a === 'lang') return toast('More languages are coming soon');
+  if (a === 'pro') return modal(`<h3>⭐ MITRO Pro</h3><p>HD video calls, AI meeting notes and live translation. Subscribe in the MITRO mobile app (Google Play / App Store).</p>`);
+  if (a === 'install') return modal(`<h3>📲 Install MITRO</h3><p><b>Android (Chrome):</b> menu ⋮ → <b>Install app</b> or <b>Add to Home screen</b>.</p><p><b>iPhone (Safari):</b> Share ⬆️ → <b>Add to Home Screen</b>.</p><p><b>Computer (Chrome/Edge):</b> the install icon in the address bar.</p>`);
+  if (a === 'invite' || a === 'qr') { const u = location.origin + '/app/'; const t = `Chat with me on MITRO${S.prof?.username ? ' — I\'m @' + S.prof.username : ''}: ${u}`; try { if (navigator.share) await navigator.share({ title: 'MITRO', text: t, url: u }); else { await navigator.clipboard.writeText(t); toast('Invite link copied'); } } catch {} return; }
+  if (a === 'ask') return modal(`<h3>💬 Ask a Question</h3><p>Email us at <b>saiteja46@gmail.com</b> or visit <a href="/support.html" target="_blank">mitroworld.com/support</a>.</p>`);
+  if (a === 'faq') return window.open('/support.html', '_blank');
+  if (a === 'rules') return window.open('/child-safety.html', '_blank');
+  if (a === 'signout') { if (confirm('Sign out of MITRO on this device?')) sb.auth.signOut(); }
+}
+function profileSheet() {
+  const m = modal(`<h3>My Profile</h3><label class="small" style="display:block">Name</label><input class="in" id="n" value="${esc(S.prof?.display_name || '')}" maxlength="40">
+  <label class="small" style="display:block;margin-top:10px">Username (people can find you by it)</label><input class="in" id="u" value="${esc(S.prof?.username || '')}" maxlength="32" placeholder="e.g. saiteja">
+  <button class="btn" id="sv">Save</button><button class="btn" id="ph" style="background:var(--card);color:var(--ink)">📷 Profile photo</button>`);
+  m.querySelector('#ph').onclick = () => { m.remove(); setPhoto(); };
+  m.querySelector('#sv').onclick = async () => {
+    const n = m.querySelector('#n').value.trim(), u = m.querySelector('#u').value.trim().toLowerCase().replace(/^@/, '');
+    const patch = {}; if (n) patch.display_name = n; if (u !== (S.prof.username || '')) patch.username = u || null;
+    const { error } = await sb.from('profiles').update(patch).eq('id', S.me.id);
+    if (error) return toast(/duplicate|unique/i.test(error.message) ? 'That username is taken' : friendly(error.message));
+    Object.assign(S.prof, patch); m.remove(); toast('Saved'); if (S.tab === 'settings') settingsSide();
+  };
+}
+function contactsSide() {
+  page().innerHTML = `<div class="ttop"><span style="width:44px"></span><h2>Contacts</h2><button class="roundbtn blue" id="ad" title="Find people">＋</button></div>
+  <input class="in searchpill" id="q" placeholder="🔍 Search people"><div class="pagescroll" id="cl"></div>`;
+  const render = async () => {
+    const q = page().querySelector('#q').value.trim(); const el = page().querySelector('#cl'); if (!el) return;
+    let people = [...S.people.entries()].filter(([id]) => id !== S.me.id).map(([id, p]) => ({ id, ...p }));
+    if (q.length >= 2) { const { data } = await sb.rpc('search_users', { q }); const seen = new Set(people.map((p) => p.id)); people = people.filter((p) => nm(p).toLowerCase().includes(q.toLowerCase())).concat((data || []).filter((p) => !seen.has(p.id))); }
+    people.sort((a, b) => S.online.has(b.id) - S.online.has(a.id) || nm(a).localeCompare(nm(b)));
+    el.innerHTML = `<div class="grow" id="inv" style="margin:0 6px"><div class="gi" style="background:#14B8A6">🎁</div><b>Invite Friends</b><span class="chev">›</span></div>` + (people.length ? '' : `<p class="small" style="padding:8px 16px">${q.length >= 2 ? 'No one found.' : 'People you chat with appear here. Search by name or @username to find someone.'}</p>`);
+    el.querySelector('#inv').onclick = () => settingsAction('invite');
+    for (const p of people) {
+      const r = $(`<div class="row">${av(nm(p), p.avatar_url)}<div class="meta"><b>${esc(nm(p))}</b><span class="${S.online.has(p.id) ? 'online' : ''}">${S.online.has(p.id) ? 'online' : p.username ? '@' + esc(p.username) : 'last seen recently'}</span></div></div>`);
+      r.onclick = async () => { const { data: id, error } = await sb.rpc('get_or_create_dm', { other_user: p.id }); if (error) return toast(friendly(error.message)); setTab('chats'); openById(id, { id, kind: 'chat', name: nm(p), avatar: p.avatar_url, mine: {}, other: p, conversation_members: [] }); };
+      el.appendChild(r);
+    }
+  };
+  let t; page().querySelector('#q').oninput = () => { clearTimeout(t); t = setTimeout(render, 300); };
+  page().querySelector('#ad').onclick = () => pickPeople(false);
+  if (!S.convs.length) loadConvs().then(render); else render();
+}
+
+// ---------- Chats list ----------
+function chatsSide() {
+  page().innerHTML = `<div class="ttop"><button class="pillbtn" id="ed">Edit</button><h2>Chats</h2><button class="roundbtn" id="ns" title="New story">◎</button><button class="roundbtn blue" id="nc" title="New message">✎</button></div>
+  <div class="stories" id="st"></div>
+  <input class="in searchpill" id="q" placeholder="🔍 Search">
+  <div class="chips" style="overflow-x:auto;padding-top:2px">${['all', 'unread', 'groups', 'channels', 'archived'].map((f) => `<button class="chip${S.filter === f ? ' on' : ''}" data-f="${f}">${f[0].toUpperCase() + f.slice(1)}</button>`).join('')}</div><div class="list" id="list"></div>`;
+  const side = root.querySelector('#side');
+  page().querySelector('#nc').onclick = newMenu; page().querySelector('#ns').onclick = newStatus;
+  page().querySelector('#ed').onclick = (e) => { const on = side.classList.toggle('editing'); e.target.textContent = on ? 'Done' : 'Edit'; e.target.classList.toggle('on', on); if (on) toast('Tap ⋮ on a chat to pin, mute or archive'); };
+  page().querySelector('#q').oninput = renderList;
+  page().querySelectorAll('.chip').forEach((b) => (b.onclick = () => { S.filter = b.dataset.f; chatsSide(); }));
+  renderList(); loadConvs(); refreshStories();
+}
+function newMenu() {
+  const m = modal(`<h3>Start something</h3><div class="menu-grid"><button data-a="chat">💬 New chat</button><button data-a="group">👥 New group</button><button data-a="channel">📢 New channel</button><button data-a="find">🔎 Find public channels</button><button data-a="saved">🔖 Saved Messages</button><button data-a="shield">🛡️ Check a message for scams</button></div>`);
+  m.querySelectorAll('[data-a]').forEach((b) => (b.onclick = () => { m.remove(); ({ chat: () => pickPeople(false), group: () => pickPeople(true), channel: newChannel, find: findChannels, saved: openSaved, shield: scamChecker })[b.dataset.a](); }));
+}
+let _lcT; function loadConvsSoon() { clearTimeout(_lcT); _lcT = setTimeout(loadConvs, 250); }
+let _exT; function extrasSoon() { clearTimeout(_exT); _exT = setTimeout(() => { if (S.cur) loadExtras().then(() => renderMsgs(false)); }, 200); }
+async function loadConvs() {
+  const { data } = await sb.from('conversations').select('id, is_group, kind, title, handle, about, is_public, pinned_message_id, last_message_at, disappear_after, conversation_members(user_id, role, last_read_at, archived, pinned_at, muted, profiles(id, display_name, username, avatar_url))').order('last_message_at', { ascending: false });
+  const list = data || [];
+  const ids = list.map((c) => c.id); const lastBy = new Map();
+  if (ids.length) { const { data: recent } = await sb.from('messages').select('id, conversation_id, body, kind, file_name, e2ee, redacted_at, deleted_by_sender, sender_id, created_at').in('conversation_id', ids).order('created_at', { ascending: false }).limit(Math.min(1000, ids.length * 8)); for (const m of recent || []) if (!lastBy.has(m.conversation_id)) lastBy.set(m.conversation_id, m); }
+  const lasts = list.map((c) => ({ data: lastBy.get(c.id) || null }));
+  S.convs = list.map((c, i) => {
+    const mine = c.conversation_members.find((m) => m.user_id === S.me.id) || {};
+    c.conversation_members.forEach((m) => m.profiles && S.people.set(m.user_id, m.profiles));
+    const other = c.kind === 'chat' && !c.is_group ? c.conversation_members.find((m) => m.user_id !== S.me.id)?.profiles : null;
+    const last = lasts[i].data;
+    return { ...c, other, name: c.kind === 'saved' ? 'Saved Messages' : c.is_group ? c.title || 'Group' : nm(other), avatar: other?.avatar_url, last, mine,
+      unread: !!(last && last.sender_id !== S.me.id && (!mine.last_read_at || last.created_at > mine.last_read_at)), members: c.conversation_members.length };
+  });
+  if (S.cur) { const fresh = S.convs.find((x) => x.id === S.cur.id); if (fresh) { S.cur.conversation_members = fresh.conversation_members; S.cur.mine = fresh.mine; } }
+  const ud = root.querySelector('#ud'); if (ud) ud.hidden = !S.convs.some((c) => c.unread && !c.mine.muted && !c.mine.archived);
+  if (S.tab === 'chats') renderList();
+}
+function renderList() {
+  const el = root.querySelector('#list'); if (!el) return;
+  const q = (root.querySelector('#q')?.value || '').toLowerCase();
+  let rows = S.convs.filter((c) => (S.filter === 'archived' ? c.mine.archived : !c.mine.archived));
+  if (S.filter === 'unread') rows = rows.filter((c) => c.unread); if (S.filter === 'groups') rows = rows.filter((c) => c.is_group && c.kind === 'chat'); if (S.filter === 'channels') rows = rows.filter((c) => c.kind === 'channel');
+  if (q) rows = rows.filter((c) => c.name.toLowerCase().includes(q) || (c.last?.body || '').toLowerCase().includes(q));
+  rows.sort((a, b) => !!b.mine.pinned_at - !!a.mine.pinned_at || Date.parse(b.last_message_at) - Date.parse(a.last_message_at));
+  el.innerHTML = rows.length ? '' : `<div class="small" style="padding:8px 16px">${q ? 'No chats match.' : S.filter === 'unread' ? 'All caught up ✨' : S.filter === 'archived' ? 'No archived chats.' : S.filter === 'channels' ? 'No channels yet. Tap 🔎 to find one or ✎ → New channel.' : S.filter === 'groups' ? 'No groups yet. Tap ✎ → New group.' : 'No chats yet. Tap ✎ to start a chat, group or channel — or 🔖 for Saved Messages.'}</div>`;
+  for (const c of rows) {
+    const online = c.other && S.online.has(c.other.id);
+    const r = $(`<div class="row${S.cur?.id === c.id ? ' on' : ''}">${av(c.name, c.avatar, 0, kindIcon(c))}<div class="meta"><b>${esc(c.name)}${online ? ' <span style="color:#10B981">●</span>' : ''}</b><span>${c.last && c.last.sender_id !== S.me.id && c.last.kind === 'text' && !c.last.e2ee && shieldOn() && scanText(c.last.body).level === 'scam' ? '⚠️ ' : ''}${esc(preview(c.last && S.edits.has(c.last.id) ? { ...c.last, body: S.edits.get(c.last.id).body } : c.last))}</span></div>
+      <div class="rt"><span>${c.last ? tm(c.last.created_at) : ''}</span><span>${c.disappear_after ? '⏱️' : ''}${c.mine.muted ? '🔕' : ''}${c.mine.pinned_at ? '📌' : ''}${c.unread ? '<span class="badge">new</span>' : ''}</span></div><button class="more" title="Options">⋮</button></div>`);
+    r.onclick = (e) => { if (e.target.classList.contains('more')) return chatMenu(c); openChat(c); };
+    r.oncontextmenu = (e) => { e.preventDefault(); chatMenu(c); };
+    el.appendChild(r);
+  }
+}
+function chatMenu(c) {
+  const m = modal(`<h3>${esc(c.name)}</h3>
+   <button class="act" data-a="pin">📌 ${c.mine.pinned_at ? 'Unpin chat' : 'Pin chat'}</button><button class="act" data-a="mute">${c.mine.muted ? '🔔 Unmute' : '🔕 Mute'}</button>
+   <button class="act" data-a="arch">🗂️ ${c.mine.archived ? 'Unarchive' : 'Archive'}</button><button class="act" data-a="read">✅ Mark as read</button>`);
+  m.querySelectorAll('.act').forEach((b) => (b.onclick = async () => {
+    const a = b.dataset.a, patch = a === 'pin' ? { pinned_at: c.mine.pinned_at ? null : new Date().toISOString() } : a === 'mute' ? { muted: !c.mine.muted } : a === 'arch' ? { archived: !c.mine.archived, pinned_at: null } : { last_read_at: new Date().toISOString() };
+    const { error } = await sb.from('conversation_members').update(patch).eq('conversation_id', c.id).eq('user_id', S.me.id);
+    m.remove(); if (error) return toast(/pin up to/i.test(error.message) ? 'You can pin up to 5 chats.' : error.message); loadConvs();
+  }));
+}
+async function openById(id, fallback) { await loadConvs(); const c = S.convs.find((x) => x.id === id) || fallback; if (c) openChat(c); }
+async function openSaved() { const { data: id, error } = await sb.rpc('get_saved_chat'); if (error) return toast(friendly(error.message)); setTab('chats'); openById(id); }
+function pickPeople(group) {
+  const chosen = new Map();
+  const m = modal(`<h3>${group ? 'New group' : 'New chat'}</h3>${group ? '<input class="in" id="gt" placeholder="Group name" maxlength="60" style="margin-bottom:10px">' : ''}
+   <input class="in" id="s" placeholder="Search by name or @username"><div id="ch" style="margin:6px 0"></div><div id="r"></div>${group ? '<button class="btn" id="mk" disabled>Create group</button>' : ''}<button class="ghost" id="x">Close</button>`);
+  m.querySelector('#x').onclick = () => m.remove();
+  const chips = () => { m.querySelector('#ch').innerHTML = [...chosen.values()].map((p) => `<span class="pick">${esc(nm(p))}</span>`).join(''); if (group) m.querySelector('#mk').disabled = !chosen.size || !m.querySelector('#gt').value.trim(); };
+  if (group) { m.querySelector('#gt').oninput = chips; m.querySelector('#mk').onclick = async () => { const { data: id, error } = await sb.rpc('create_group', { title: m.querySelector('#gt').value.trim(), members: [...chosen.keys()] }); if (error) return toast(friendly(error.message)); m.remove(); openById(id); }; }
+  let t; m.querySelector('#s').oninput = (e) => { clearTimeout(t); t = setTimeout(async () => {
+    const q = e.target.value.trim(), r = m.querySelector('#r'); if (q.length < 2) return (r.innerHTML = '');
+    const { data } = await sb.rpc('search_users', { q }); r.innerHTML = (data || []).length ? '' : '<p class="small">No one found. Ask them to sign up at mitroworld.com/app</p>';
+    for (const p of data || []) {
+      const row = $(`<div class="row" style="padding:8px 2px">${av(nm(p), p.avatar_url, 42)}<div class="meta"><b>${esc(nm(p))}</b><span>${p.username ? '@' + esc(p.username) : ''}</span></div>${group ? '<span class="small">＋</span>' : ''}</div>`);
+      row.onclick = async () => {
+        if (group) { chosen.has(p.id) ? chosen.delete(p.id) : chosen.set(p.id, p); return chips(); }
+        const { data: id, error } = await sb.rpc('get_or_create_dm', { other_user: p.id }); if (error) return toast(friendly(error.message));
+        m.remove(); openById(id, { id, kind: 'chat', name: nm(p), avatar: p.avatar_url, mine: {}, other: p, conversation_members: [] });
+      };
+      r.appendChild(row);
+    }
+  }, 300); };
+  m.querySelector('#s').focus();
+}
+function newChannel() {
+  const m = modal(`<h3>📢 New channel</h3><p class="small" style="margin-top:0">Broadcast to unlimited subscribers. Only admins can post.</p>
+   <input class="in" id="t" placeholder="Channel name" maxlength="60"><textarea class="in" id="a" rows="2" placeholder="Description (optional)" maxlength="300" style="margin-top:8px"></textarea>
+   <div class="toggle"><span>Public (anyone can find &amp; join)</span><input type="checkbox" id="p" checked style="width:22px;height:22px"></div>
+   <div id="hw"><input class="in" id="h" placeholder="Link name, e.g. mitronews" maxlength="32"><p class="small" id="hp">mitroworld.com/app/#c/…</p></div>
+   <button class="btn" id="go">Create channel</button><button class="ghost" id="x">Cancel</button>`);
+  const h = m.querySelector('#h'), p = m.querySelector('#p');
+  h.oninput = () => { h.value = h.value.toLowerCase().replace(/[^a-z0-9_]/g, ''); m.querySelector('#hp').textContent = 'mitroworld.com/app/#c/' + (h.value || '…'); };
+  p.onchange = () => (m.querySelector('#hw').style.display = p.checked ? '' : 'none');
+  m.querySelector('#x').onclick = () => m.remove();
+  m.querySelector('#go').onclick = async () => {
+    const { data: id, error } = await sb.rpc('create_channel', { title: m.querySelector('#t').value, handle: p.checked ? h.value : null, about: m.querySelector('#a').value, is_public: p.checked });
+    if (error) return toast(friendly(error.message)); m.remove(); toast('Channel created'); openById(id);
+  };
+}
+function findChannels() {
+  const m = modal(`<h3>🔎 Find channels</h3><input class="in" id="s" placeholder="Search channel name or @link"><div id="r" style="margin-top:8px"><p class="small">Type at least 2 letters.</p></div><button class="ghost" id="x">Close</button>`);
+  m.querySelector('#x').onclick = () => m.remove();
+  let t; m.querySelector('#s').oninput = (e) => { clearTimeout(t); t = setTimeout(async () => {
+    const q = e.target.value.trim().replace(/^@/, ''), r = m.querySelector('#r'); if (q.length < 2) return;
+    const { data, error } = await sb.rpc('search_channels', { q }); if (error) return toast(error.message);
+    r.innerHTML = (data || []).length ? '' : '<p class="small">No public channels found.</p>';
+    for (const c of data || []) {
+      const row = $(`<div class="row" style="padding:8px 2px">${av(c.title, null, 42, '📢')}<div class="meta"><b>${esc(c.title)}</b><span>@${esc(c.handle)} · ${c.subscribers} subscriber${c.subscribers === 1 ? '' : 's'}${c.about ? ' · ' + esc(c.about) : ''}</span></div><button class="chip ${c.joined ? '' : 'on'}">${c.joined ? 'Open' : 'Join'}</button></div>`);
+      row.onclick = async () => { if (!c.joined) { const { error } = await sb.rpc('join_channel', { conv: c.id }); if (error) return toast(friendly(error.message)); toast('Joined ' + c.title); } m.remove(); setTab('chats'); openById(c.id); };
+      r.appendChild(row);
+    }
+  }, 300); };
+  m.querySelector('#s').focus();
+}
+
+// ---------- Chat ----------
+async function openChat(c) {
+  if (S.convChan) { sb.removeChannel(S.convChan); S.convChan = null; }
+  S.cur = c; S.reply = null; S.msgs = new Map(); S.bub = new Map(); S._mk = ''; S.typing = new Map(); S.search = ''; renderList();
+  root.querySelector('#app').classList.add('chatting');
+  const main = root.querySelector('#main');
+  const canPost = c.kind !== 'channel' || isAdmin(c);
+  const voiceOk = typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported?.('audio/mp4');
+  main.innerHTML = `<div class="hdr"><button class="ic back" id="bk">←</button>${av(c.name, c.avatar, 42, kindIcon(c))}<div class="meta"><b>${esc(c.name)}</b><span id="sub"></span></div><button class="ic" id="sr" title="Search">🔍</button>${canPost && c.kind !== 'saved' ? '<button class="ic" id="pl" title="New poll">📊</button>' : ''}<button class="ic" id="op" title="Options">⋮</button></div>
+  <div id="sb"></div><div id="pn"></div><div id="bn"></div><div class="msgs" id="ms"></div><div id="rb"></div>
+  ${canPost ? `<form class="comp" id="cf"><input type="file" id="fl" hidden><button type="button" class="attach" id="at" title="Photo or file">📎</button><button type="button" class="attach" id="em" title="Emoji & stickers">😊</button><textarea id="t" rows="1" placeholder="${c.kind === 'channel' ? 'Broadcast a message' : 'Message'}" maxlength="4000"></textarea>${voiceOk ? '<button type="button" class="attach" id="mic" title="Hold to record">🎙️</button>' : ''}<button class="send" title="Send">➤</button></form>`
+    : `<div class="chbar"><button id="mu">${c.mine.muted ? '🔔 Unmute' : '🔕 Mute'}</button><button id="lv" style="background:#FEE2E2;color:#DC2626">Leave channel</button></div>`}`;
+  main.querySelector('#bk').onclick = () => { S.cur = null; root.querySelector('#app').classList.remove('chatting'); renderList(); };
+  main.querySelector('#pl')?.addEventListener('click', newPoll); main.querySelector('#op').onclick = convMenu; main.querySelector('#sr').onclick = searchBar;
+  main.querySelector('#mu')?.addEventListener('click', async () => { await sb.from('conversation_members').update({ muted: !c.mine.muted }).eq('conversation_id', c.id).eq('user_id', S.me.id); c.mine.muted = !c.mine.muted; main.querySelector('#mu').textContent = c.mine.muted ? '🔔 Unmute' : '🔕 Mute'; });
+  main.querySelector('#lv')?.addEventListener('click', leaveConv);
+  banner(); headerSub();
+  // per-chat typing channel
+  S.convChan = sb.channel('typing:' + c.id).on('broadcast', { event: 'typing' }, ({ payload }) => {
+    if (payload.uid === S.me.id) return; S.typing.set(payload.uid, { name: payload.name, until: Date.now() + 4000 }); typingLine(); setTimeout(typingLine, 4200);
+  }).subscribe();
+  const { data } = await sb.from('messages').select('*').eq('conversation_id', c.id).order('created_at', { ascending: false }).limit(150);
+  if (S.cur !== c) return;
+  (data || []).reverse().forEach((m) => S.msgs.set(m.id, m));
+  await Promise.all([loadPolls(), loadExtras()]); renderMsgs(true); pinBar(); markRead();
+  if (!canPost) return;
+  const f = main.querySelector('#cf'), t = main.querySelector('#t');
+  let lastTyping = 0;
+  t.oninput = () => { t.style.height = 'auto'; t.style.height = Math.min(140, t.scrollHeight) + 'px'; if (Date.now() - lastTyping > 2500 && c.kind !== 'saved') { lastTyping = Date.now(); S.convChan?.send({ type: 'broadcast', event: 'typing', payload: { uid: S.me.id, name: nm(S.prof) } }); } };
+  t.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); f.requestSubmit(); } };
+  f.onsubmit = async (e) => {
+    e.preventDefault(); const body = t.value.trim(); if (!body) return; t.value = ''; t.style.height = 'auto';
+    const reply_to = S.reply?.id ?? null; S.reply = null; replyBar();
+    const tmp = -Date.now(); S.msgs.set(tmp, { id: tmp, conversation_id: c.id, sender_id: S.me.id, kind: 'text', body, reply_to, created_at: new Date().toISOString(), _pending: true }); renderMsgs(true);
+    const { data: sent, error } = await sb.from('messages').insert({ conversation_id: c.id, sender_id: S.me.id, kind: 'text', body, reply_to }).select().single();
+    S.msgs.delete(tmp);
+    if (error) { if (S.cur?.id === c.id) renderMsgs(false); t.value = body; toast(friendly(error.message)); } else if (sent && S.cur?.id === c.id) { S.msgs.set(sent.id, sent); renderMsgs(false); loadConvsSoon(); }
+  };
+  const fl = main.querySelector('#fl'); main.querySelector('#at').onclick = () => fl.click();
+  fl.onchange = async () => { const file = fl.files[0]; fl.value = ''; if (file) sendFile(file); };
+  const mic = main.querySelector('#mic'); if (mic) setupMic(mic);
+  main.querySelector('#em').onclick = () => emojiPanel(c, t);
+  t.focus();
+}
+function headerSub() {
+  const el = root.querySelector('#sub'); const c = S.cur; if (!el || !c) return;
+  const typers = [...S.typing.entries()].filter(([, v]) => v.until > Date.now());
+  if (typers.length) { el.className = 'typing'; el.textContent = (c.is_group ? typers.map(([, v]) => v.name).join(', ') + ' ' : '') + 'typing…'; return; }
+  el.className = '';
+  if (c.kind === 'saved') el.textContent = 'Your private cloud notes';
+  else if (c.kind === 'channel') el.textContent = (c.handle ? '@' + c.handle + ' · ' : '') + (isAdmin(c) ? c.members + ' subscriber' + (c.members === 1 ? '' : 's') : 'channel');
+  else if (c.is_group) el.textContent = c.members + ' members' + (c.conversation_members ? ' · ' + c.conversation_members.filter((m) => S.online.has(m.user_id)).length + ' online' : '');
+  else if (c.other && S.online.has(c.other.id)) { el.className = 'online'; el.textContent = 'online'; }
+  else el.textContent = c.other?.username ? '@' + c.other.username : 'last seen recently';
+}
+function typingLine() { headerSub(); }
+async function refreshMembers() { if (!S.cur || S.cur.kind === 'saved') return; const { data } = await sb.from('conversation_members').select('user_id, role, last_read_at, archived, pinned_at, muted').eq('conversation_id', S.cur.id); const k = JSON.stringify(data); if (data && S.cur && k !== S._mk) { S._mk = k; S.cur.conversation_members = data; renderMsgs(false); } }
+function banner() { const b = root.querySelector('#bn'); if (!b || !S.cur) return; const s = S.cur.disappear_after; b.innerHTML = s ? `<div class="banner">⏱️ Disappearing messages: ${s >= 7776000 ? '90 days' : s >= 604800 ? '7 days' : '24 hours'}</div>` : ''; }
+function pinBar() {
+  const el = root.querySelector('#pn'); if (!el || !S.cur) return; const id = S.cur.pinned_message_id; const m = id && S.msgs.get(id);
+  if (!id) return (el.innerHTML = '');
+  const canUnpin = !S.cur.is_group || isAdmin(S.cur);
+  el.innerHTML = `<div class="pinbar"><span>📌</span><div><b style="color:var(--p)">Pinned message</b><br>${esc(m ? (m.kind === 'text' ? bodyOf(m) : preview(m)).slice(0, 120) : 'Tap to view')}</div>${canUnpin ? '<button class="ic" id="up" title="Unpin">✕</button>' : ''}</div>`;
+  el.querySelector('.pinbar').onclick = (e) => { if (e.target.id === 'up') return; const b = root.querySelector(`[data-id="${id}"]`); if (b) { b.scrollIntoView({ block: 'center', behavior: 'smooth' }); b.animate([{ opacity: 0.4 }, { opacity: 1 }], 900); } };
+  el.querySelector('#up')?.addEventListener('click', async () => { const { error } = await sb.rpc('pin_message', { conv: S.cur.id, mid: null }); if (error) toast(error.message); });
+}
+function searchBar() {
+  const el = root.querySelector('#sb'); if (el.innerHTML) { el.innerHTML = ''; S.search = ''; return renderMsgs(false); }
+  el.innerHTML = '<div class="searchbar"><input class="in" id="sq" placeholder="Search in this chat" style="padding:8px 12px"><button class="ic" id="sx">✕</button></div>';
+  const q = el.querySelector('#sq'); q.focus(); q.oninput = () => { S.search = q.value.trim().toLowerCase(); renderMsgs(false); const hit = root.querySelector('.b .hl'); hit?.scrollIntoView({ block: 'center' }); };
+  el.querySelector('#sx').onclick = () => { el.innerHTML = ''; S.search = ''; renderMsgs(false); };
+}
+function markRead() { if (S.cur) sb.from('conversation_members').update({ last_read_at: new Date().toISOString() }).eq('conversation_id', S.cur.id).eq('user_id', S.me.id).then(() => {}); }
+async function loadPolls() {
+  if (!S.cur) return; const ids = [...S.msgs.values()].filter((m) => m.kind === 'poll').map((m) => m.id); if (!ids.length) return;
+  const [{ data: p }, { data: v }] = await Promise.all([sb.from('polls').select('*').in('message_id', ids), sb.from('poll_votes').select('*').in('message_id', ids)]);
+  (p || []).forEach((x) => S.polls.set(x.message_id, x)); S.votes = v || [];
+}
+async function loadExtras() {
+  if (!S.cur) return;
+  const [{ data: r }, { data: e }] = await Promise.all([sb.from('message_reactions').select('message_id, user_id, emoji').eq('conversation_id', S.cur.id), sb.from('message_edits').select('message_id, body, edited_at').eq('conversation_id', S.cur.id)]);
+  S.reacts = r || []; S.edits = new Map((e || []).map((x) => [x.message_id, x]));
+}
+function quoteOf(id) { const q = S.msgs.get(id); if (!q) return ''; return `<div class="q"><b>${esc(q.sender_id === S.me.id ? 'You' : nm(S.people.get(q.sender_id)))}</b><br>${esc((q.kind === 'text' ? bodyOf(q) : preview(q)).slice(0, 120))}</div>`; }
+function hl(text) { const t = esc(text); if (!S.search) return t; const i = t.toLowerCase().indexOf(esc(S.search)); return i < 0 ? t : t.slice(0, i) + '<span class="hl">' + t.slice(i, i + esc(S.search).length) + '</span>' + t.slice(i + esc(S.search).length); }
+function ticks(m) {
+  const c = S.cur; if (m.sender_id !== S.me.id || c.kind !== 'chat') return '';
+  const others = (c.conversation_members || []).filter((x) => x.user_id !== S.me.id);
+  const read = others.length && others.every((x) => x.last_read_at && x.last_read_at >= m.created_at);
+  return `<span class="tick${read ? ' read' : ''}">${read ? '✓✓' : '✓'}</span>`;
+}
+function renderMsgs(scroll = true) {
+  const ms = root.querySelector('#ms'); if (!ms || !S.cur) return; const atEnd = ms.scrollHeight - ms.scrollTop - ms.clientHeight < 80;
+  const frag = document.createDocumentFragment(); S.bub = S.bub || new Map(); let lastDay = '';
+  for (const m of S.msgs.values()) {
+    if (m.expires_at && Date.parse(m.expires_at) < Date.now()) continue;
+    const text = m.kind === 'text' ? bodyOf(m) : m.body;
+    if (S.search && !(text || '').toLowerCase().includes(S.search)) continue;
+    const day = new Date(m.created_at).toDateString(); if (day !== lastDay) { lastDay = day; frag.appendChild($(`<div class="small daytag" style="align-self:center;background:#fff;border-radius:8px;padding:3px 10px;margin:6px 0">${esc(tm(m.created_at).includes(':') ? 'Today' : tm(m.created_at))}</div>`)); }
+    const mine = m.sender_id === S.me.id; let inner;
+    if (m.deleted_by_sender) inner = `<i>${mine ? 'You deleted this message' : 'This message was deleted'}</i>`;
+    else if (m.redacted_at) inner = '<i>Message removed for breaking the guidelines</i>';
+    else if (m.e2ee) inner = '🔒 End-to-end encrypted — open in the MITRO app to read';
+    else if (m.kind === 'image') inner = `<img class="ph" data-p="${esc(m.file_path)}" alt="Photo">${m.body ? '<br>' + hl(m.body) : ''}`;
+    else if (m.kind === 'file') inner = `📎 <a href="#" data-f="${esc(m.file_path)}" style="color:inherit;font-weight:600">${esc(m.file_name || 'File')}</a>${m.body ? '<br>' + hl(m.body) : ''}`;
+    else if (m.kind === 'voice') inner = `<audio controls preload="none" data-a="${esc(m.file_path)}"></audio>`;
+    else if (m.kind === 'poll') inner = pollHtml(m);
+    else if (m.kind === 'ai') inner = '<b>✨ MITRO AI · meeting notes</b><br>' + esc(m.body);
+    else inner = isJumbo(text) && !S.search ? '<span class="jumbo">' + esc(text) + '</span>' : linkify(hl(text)) + (!mine && shieldOn() ? shieldBadge(scanText(text)) : '');
+    const who = S.cur.is_group && S.cur.kind !== 'channel' && !mine ? `<span class="who">${esc(nm(S.people.get(m.sender_id)))}</span>` : '';
+    const counts = {}; S.reacts.filter((r) => r.message_id === m.id).forEach((r) => { counts[r.emoji] = counts[r.emoji] || { n: 0, mine: false }; counts[r.emoji].n++; if (r.user_id === S.me.id) counts[r.emoji].mine = true; });
+    const rx = Object.keys(counts).length ? `<div class="rx">${Object.entries(counts).map(([e, v]) => `<button data-e="${e}" class="${v.mine ? 'mine' : ''}">${e} ${v.n}</button>`).join('')}</div>` : '';
+    const edited = S.edits.has(m.id) && !m.deleted_by_sender ? 'edited · ' : '';
+    const hs = `<div class="b${m.kind === 'ai' ? ' sys' : mine && S.cur.kind !== 'channel' ? ' me' : ''}${m.kind === 'text' && !m.deleted_by_sender && !m.redacted_at && !m.e2ee && isJumbo(text) ? ' stk' : ''}" data-id="${m.id}">${who}${m.reply_to ? quoteOf(m.reply_to) : ''}${inner}${rx}<span class="t">${S.cur.pinned_message_id === m.id ? '📌 ' : ''}${m.expires_at ? '⏱️ ' : ''}${edited}${new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}${ticks(m)}</span></div>`;
+    let b = S.bub.get(m.id); if (b && b._k === hs) { frag.appendChild(b); continue; }
+    b = $(hs); b._k = hs; S.bub.set(m.id, b);
+    b.onclick = (e) => { const ul = e.target.closest('.ulink'); if (ul) { e.preventDefault(); e.stopPropagation(); return openLink(ul.dataset.u); } if (e.target.closest('[data-sh]')) return shieldSheet(text); if (e.target.closest('.opt,audio,a,.rx button')) return; msgMenu(m); };
+    b.ondblclick = (e) => { e.preventDefault(); react(m, '❤️'); };
+    b.querySelectorAll('.opt').forEach((o) => (o.onclick = () => vote(m, +o.dataset.i)));
+    b.querySelectorAll('.rx button').forEach((o) => (o.onclick = () => react(m, o.dataset.e)));
+    frag.appendChild(b);
+  }
+  if (!frag.children.length) frag.appendChild($(`<div class="empty small">${S.search ? 'No messages match.' : S.cur.kind === 'saved' ? '🔖 Save notes, links and files here. Only you can see this chat.' : S.cur.kind === 'channel' ? '📢 No posts yet.' : 'Say hi 👋'}</div>`));
+  ms.replaceChildren(frag);
+  ms.querySelectorAll('img[data-p]').forEach(async (i) => { if (i.getAttribute('src')) return; i.src = await signed('chat-files', i.dataset.p); i.onclick = (e) => { e.stopPropagation(); window.open(i.src, '_blank'); }; });
+  ms.querySelectorAll('audio[data-a]').forEach(async (a) => { if (a.getAttribute('src')) return; a.src = await signed('chat-files', a.dataset.a); });
+  ms.querySelectorAll('a[data-f]').forEach((a) => (a.onclick = async (e) => { e.preventDefault(); e.stopPropagation(); window.open(await signed('chat-files', a.dataset.f), '_blank'); }));
+  if (scroll === true || atEnd) ms.scrollTop = ms.scrollHeight;
+}
+async function react(m, emoji) { if (m.deleted_by_sender || m.redacted_at) return; const { error } = await sb.rpc('react', { mid: m.id, emoji }); if (error) return toast(friendly(error.message)); await loadExtras(); renderMsgs(false); }
+function pollHtml(m) {
+  const p = S.polls.get(m.id); if (!p) return '📊 ' + esc(m.body || 'Poll');
+  const vs = S.votes.filter((v) => v.message_id === m.id), voters = new Set(vs.map((v) => v.user_id)).size, myv = new Set(vs.filter((v) => v.user_id === S.me.id).map((v) => v.option_idx)), voted = myv.size > 0;
+  return `<div class="poll"><b>📊 ${esc(p.question)}</b>${p.options.map((o, i) => { const n = vs.filter((v) => v.option_idx === i).length, pct = voters ? Math.round((n / voters) * 100) : 0;
+    return `<button class="opt${myv.has(i) ? ' mine' : ''}" data-i="${i}">${voted ? `<i style="width:${pct}%"></i>` : ''}<span><span>${myv.has(i) ? '✓ ' : ''}${esc(o)}</span>${voted ? `<span>${pct}%</span>` : ''}</span></button>`; }).join('')}
+    <span class="small" style="color:inherit;opacity:.75">${voters} vote${voters === 1 ? '' : 's'} · ${p.multi ? 'Choose any' : 'Choose one'}</span></div>`;
+}
+async function vote(m, i) {
+  const p = S.polls.get(m.id); const mine = new Set(S.votes.filter((v) => v.message_id === m.id && v.user_id === S.me.id).map((v) => v.option_idx));
+  const choices = p.multi ? (mine.has(i) ? [...mine].filter((x) => x !== i) : [...mine, i]) : (mine.has(i) ? [] : [i]);
+  const { error } = await sb.rpc('vote_poll', { mid: m.id, choices }); if (error) return toast(friendly(error.message)); await loadPolls(); renderMsgs(false);
+}
+function msgMenu(m) {
+  const c = S.cur, mine = m.sender_id === S.me.id, live = !m.deleted_by_sender && !m.redacted_at;
+  const recent = Date.now() - Date.parse(m.created_at) < 48 * 3600e3;
+  const canDel = mine && live && recent, canCopy = live && !m.e2ee && (m.kind === 'text' || m.body), canEdit = mine && live && recent && m.kind === 'text' && !m.e2ee;
+  const canPin = live && (!c.is_group || isAdmin(c)) && c.kind !== 'saved', canPost = c.kind !== 'channel' || isAdmin(c);
+  const md = modal(`${live ? `<div class="emojis">${EMOJI.map((e) => `<button data-e="${e}">${e}</button>`).join('')}</div>` : ''}
+    ${live && canPost ? '<button class="act" data-a="r">↩️ Reply</button>' : ''}${canCopy ? '<button class="act" data-a="c">📋 Copy</button>' : ''}${live && !m.e2ee && m.kind === 'text' ? '<button class="act" data-a="sc">🛡️ Check for scam</button>' : ''}${live && !m.e2ee ? '<button class="act" data-a="f">↪️ Forward</button>' : ''}
+    ${live && c.kind !== 'saved' && !m.e2ee ? '<button class="act" data-a="s">🔖 Save to Saved Messages</button>' : ''}${live ? '<button class="act" data-a="rm">⏰ Remind me</button>' : ''}${canEdit ? '<button class="act" data-a="e">✏️ Edit</button>' : ''}
+    ${canPin ? `<button class="act" data-a="p">📌 ${c.pinned_message_id === m.id ? 'Unpin' : 'Pin'}</button>` : ''}${canDel ? '<button class="act" data-a="d" style="color:#DC2626">🗑️ Delete for everyone</button>' : ''}
+    <p class="small">${new Date(m.created_at).toLocaleString()}${S.edits.has(m.id) ? ' · edited ' + tm(S.edits.get(m.id).edited_at) : ''}</p>`);
+  md.querySelectorAll('[data-e]').forEach((b) => (b.onclick = () => { md.remove(); react(m, b.dataset.e); }));
+  md.querySelectorAll('.act').forEach((b) => (b.onclick = async () => {
+    md.remove(); const a = b.dataset.a, text = m.kind === 'text' ? bodyOf(m) : m.body;
+    if (a === 'r') { S.reply = m; replyBar(); root.querySelector('#t')?.focus(); }
+    if (a === 'sc') shieldSheet(text);
+    if (a === 'c') { try { await navigator.clipboard.writeText(text || ''); toast('Copied'); } catch { toast('Copy not allowed by your browser'); } }
+    if (a === 'f') forward(m);
+    if (a === 's') saveToSaved(m);
+    if (a === 'e') editMsg(m);
+    if (a === 'rm') remindMenu(m);
+    if (a === 'p') { const { error } = await sb.rpc('pin_message', { conv: c.id, mid: c.pinned_message_id === m.id ? null : m.id }); if (error) toast(friendly(error.message)); }
+    if (a === 'd') { const { error } = await sb.rpc('delete_my_message', { mid: m.id }); if (error) toast(error.message); }
+  }));
+}
+function editMsg(m) {
+  const md = modal(`<h3>✏️ Edit message</h3><textarea class="in" id="eb" rows="4" maxlength="4000">${esc(bodyOf(m))}</textarea><button class="btn" id="go">Save</button><button class="ghost" id="x">Cancel</button>`);
+  md.querySelector('#x').onclick = () => md.remove();
+  md.querySelector('#go').onclick = async () => { const { error } = await sb.rpc('edit_message', { mid: m.id, new_body: md.querySelector('#eb').value }); if (error) return toast(friendly(error.message)); md.remove(); await loadExtras(); renderMsgs(false); };
+}
+function replyBar() { const rb = root.querySelector('#rb'); if (!rb) return; if (!S.reply) return (rb.innerHTML = ''); rb.innerHTML = `<div class="replybar"><div><b style="color:var(--p)">Replying to ${esc(S.reply.sender_id === S.me.id ? 'yourself' : nm(S.people.get(S.reply.sender_id)))}</b><br>${esc((S.reply.kind === 'text' ? bodyOf(S.reply) : preview(S.reply)).slice(0, 90))}</div><button class="ic" id="xr">✕</button></div>`; rb.querySelector('#xr').onclick = () => { S.reply = null; replyBar(); }; }
+function fwdText(m) { const t = m.kind === 'text' ? bodyOf(m) : m.kind === 'image' ? '📷 Photo' + (m.body ? ': ' + m.body : '') : m.kind === 'file' ? '📎 ' + (m.file_name || 'File') : m.kind === 'poll' ? '📊 ' + m.body : preview(m); const from = m.sender_id === S.me.id ? '' : 'Forwarded from ' + nm(S.people.get(m.sender_id)) + ':\n'; return (from + t).slice(0, 4000); }
+async function saveToSaved(m) { const { data: id, error } = await sb.rpc('get_saved_chat'); if (error) return toast(friendly(error.message)); const r = await sb.from('messages').insert({ conversation_id: id, sender_id: S.me.id, kind: 'text', body: fwdText(m) }); toast(r.error ? friendly(r.error.message) : 'Saved to 🔖 Saved Messages'); }
+function forward(m) {
+  const chosen = new Set();
+  const md = modal(`<h3>Forward to… (up to 5)</h3><div id="fl" style="max-height:50vh;overflow:auto"></div><button class="btn" id="go" disabled>Send</button><button class="ghost" id="x">Cancel</button>`);
+  md.querySelector('#x').onclick = () => md.remove();
+  for (const c of S.convs.filter((c) => !c.mine.archived && (c.kind !== 'channel' || isAdmin(c)))) {
+    const r = $(`<div class="row" style="padding:8px 2px">${av(c.name, c.avatar, 40, kindIcon(c))}<div class="meta"><b>${esc(c.name)}</b></div><span class="small">○</span></div>`);
+    r.onclick = () => { if (chosen.has(c.id)) chosen.delete(c.id); else if (chosen.size < 5) chosen.add(c.id); r.lastChild.textContent = chosen.has(c.id) ? '●' : '○'; md.querySelector('#go').disabled = !chosen.size; };
+    md.querySelector('#fl').appendChild(r);
+  }
+  md.querySelector('#go').onclick = async () => { let bad = 0; for (const id of chosen) { const r = await sb.from('messages').insert({ conversation_id: id, sender_id: S.me.id, kind: 'text', body: fwdText(m) }); if (r.error) bad++; } md.remove(); toast(bad ? 'Some chats could not receive it' : 'Forwarded'); };
+}
+async function toJpeg(file) {
+  const img = await createImageBitmap(file); const s = Math.min(1, 2048 / Math.max(img.width, img.height));
+  const c = document.createElement('canvas'); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return await new Promise((r) => c.toBlob(r, 'image/jpeg', 0.85));
+}
+async function sendFile(file, voiceMs) {
+  const c = S.cur; if (!c) return; if (file.size > 25 * 1024 * 1024) return toast('Files up to 25 MB');
+  const isImg = /^image\/(jpeg|png|webp|heic|heif)/.test(file.type) && !voiceMs;
+  let caption = null;
+  if (!voiceMs) { caption = prompt(isImg ? 'Add a caption (optional)' : 'Add a message (optional)', '') ; if (caption === null) return; caption = caption.trim() || null; }
+  toast(voiceMs ? 'Sending voice message…' : isImg ? 'Checking & sending photo…' : 'Sending file…');
+  try {
+    const blob = isImg ? await toJpeg(file) : file;
+    const qp = `${S.me.id}/${crypto.randomUUID()}`;
+    const up = await sb.storage.from('quarantine').upload(qp, blob, { contentType: voiceMs ? 'audio/mp4' : isImg ? 'image/jpeg' : file.type || 'application/octet-stream' });
+    if (up.error) throw new Error(up.error.message);
+    const body = { conversationId: c.id, quarantinePath: qp, fileName: voiceMs ? 'voice.m4a' : isImg ? (file.name.replace(/\.\w+$/, '') || 'photo') + '.jpg' : file.name, mimeType: voiceMs ? 'audio/mp4' : isImg ? 'image/jpeg' : file.type, caption, replyTo: S.reply?.id ?? null };
+    if (voiceMs) Object.assign(body, { voice: true, durationMs: voiceMs });
+    const { data, error } = await sb.functions.invoke('send-file', { body });
+    let msg = error ? (await error.context?.json?.().catch(() => null))?.error || error.message : data?.error;
+    if (msg) throw new Error(msg);
+    S.reply = null; replyBar();
+  } catch (e) { toast(friendly(String(e.message || e))); }
+}
+function setupMic(btn) {
+  let rec, chunks = [], start = 0;
+  const stop = (send) => { if (!rec || rec.state === 'inactive') return; rec.onstop = () => { rec.stream.getTracks().forEach((t) => t.stop()); btn.classList.remove('rec'); const ms = Date.now() - start; if (send && ms > 800) sendFile(new File(chunks, 'voice.m4a', { type: 'audio/mp4' }), ms); }; rec.stop(); };
+  btn.onclick = async () => {
+    if (rec && rec.state === 'recording') return stop(true);
+    try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); rec = new MediaRecorder(stream, { mimeType: 'audio/mp4' }); chunks = []; rec.ondataavailable = (e) => chunks.push(e.data); rec.start(); start = Date.now(); btn.classList.add('rec'); toast('Recording… tap 🎙️ again to send'); setTimeout(() => stop(true), 600000); }
+    catch { toast('Allow the microphone to record voice messages'); }
+  };
+}
+function newPoll() {
+  const md = modal(`<h3>New poll</h3><input class="in" id="qq" placeholder="Ask a question" maxlength="300"><div id="os"></div><label class="small" style="display:flex;gap:8px;align-items:center;margin-top:10px"><input type="checkbox" id="mu"> Allow multiple answers</label><button class="btn" id="go">Send poll</button><button class="ghost" id="x">Cancel</button>`);
+  const os = md.querySelector('#os'); const add = () => { if (os.children.length >= 12) return; const i = $(`<input class="in" placeholder="Option ${os.children.length + 1}" maxlength="100" style="margin-top:8px">`); i.oninput = () => { if (i === os.lastChild && i.value) add(); }; os.appendChild(i); };
+  add(); add(); md.querySelector('#x').onclick = () => md.remove();
+  md.querySelector('#go').onclick = async () => {
+    const question = md.querySelector('#qq').value.trim(), options = [...os.children].map((i) => i.value.trim()).filter(Boolean);
+    if (!question || options.length < 2) return toast('Add a question and at least 2 options');
+    const { error } = await sb.rpc('create_poll', { conv: S.cur.id, question, options, multi: md.querySelector('#mu').checked }); if (error) return toast(friendly(error.message)); md.remove();
+  };
+}
+async function leaveConv() {
+  const c = S.cur; if (!confirm(`Leave ${c.name}?`)) return;
+  const { error } = await sb.rpc('leave_group', { conv: c.id }); if (error) return toast(error.message);
+  S.cur = null; root.querySelector('#app').classList.remove('chatting'); loadConvs(); root.querySelector('#main').innerHTML = '<div class="empty">You left.</div>';
+}
+function convMenu() {
+  const c = S.cur; const opts = [[0, 'Off'], [86400, '24 hours'], [604800, '7 days'], [7776000, '90 days']];
+  const canTimer = c.kind === 'chat' && (!c.is_group || isAdmin(c));
+  const md = modal(`<h3>${esc(c.name)}</h3>${c.about ? `<p class="small" style="margin-top:0">${esc(c.about)}</p>` : ''}
+   ${c.kind === 'channel' && c.handle ? `<button class="act" data-k="link">🔗 Copy channel link</button>` : ''}
+   ${canTimer ? `<p class="small" style="margin:6px 0">⏱️ Disappearing messages</p>${opts.map(([s, l]) => `<button class="act" data-s="${s}">${(c.disappear_after || 0) === s ? '●' : '○'} ${l}</button>`).join('')}` : ''}
+   <button class="act" data-k="mute">${c.mine.muted ? '🔔 Unmute' : '🔕 Mute notifications'}</button>
+   ${!c.is_group && c.kind === 'chat' ? `<button class="act" data-k="block" style="color:#DC2626">⛔ Block user</button>` : ''}
+   ${c.is_group ? `<button class="act" data-k="leave" style="color:#DC2626">🚪 Leave ${c.kind === 'channel' ? 'channel' : 'group'}</button>` : ''}`);
+  md.querySelectorAll('[data-s]').forEach((b) => (b.onclick = async () => { const secs = +b.dataset.s; const { error } = await sb.rpc('set_disappearing', { conv: c.id, secs: secs || null }); md.remove(); if (error) return toast(error.message); c.disappear_after = secs || null; banner(); toast('Updated'); }));
+  md.querySelectorAll('[data-k]').forEach((b) => (b.onclick = async () => {
+    md.remove(); const k = b.dataset.k;
+    if (k === 'link') { const u = location.origin + '/app/#c/' + c.handle; try { await navigator.clipboard.writeText(u); toast('Link copied: ' + u); } catch { toast(u); } }
+    if (k === 'mute') { await sb.from('conversation_members').update({ muted: !c.mine.muted }).eq('conversation_id', c.id).eq('user_id', S.me.id); c.mine.muted = !c.mine.muted; toast(c.mine.muted ? 'Muted' : 'Unmuted'); loadConvs(); }
+    if (k === 'leave') leaveConv();
+    if (k === 'block') { const o = (c.conversation_members || []).find((x) => x.user_id !== S.me.id); if (o) blockUser(o.user_id, c.name); }
+  }));
+}
+
+// ---------- Privacy and Security (Telegram-style) ----------
+const PV_LBL = { everybody: 'Everybody', contacts: 'My Contacts', nobody: 'Nobody' };
+const AD_OPTS = [[0, 'Off'], [86400, '1 day'], [604800, '1 week'], [7776000, '3 months']];
+const AWAY_OPTS = [[null, 'Never'], [1, '1 month'], [3, '3 months'], [6, '6 months'], [12, '12 months'], [18, '18 months'], [24, '24 months']];
+const pvGet = () => Object.assign({ last_seen: 'everybody', messages: 'everybody', invites: 'everybody', auto_delete_secs: 0, away_months: null }, S.priv || {});
+async function pvSave(patch) {
+  const next = Object.assign(pvGet(), patch, { user_id: S.me.id, updated_at: new Date().toISOString() });
+  const { error } = await sb.from('user_privacy').upsert(next); if (error) { toast(friendly(error.message)); return false; }
+  S.priv = next;
+  if ('last_seen' in patch) { const show = patch.last_seen !== 'nobody'; if (S.prof?.show_last_seen !== show) { await sb.from('profiles').update({ show_last_seen: show }).eq('id', S.me.id); S.prof.show_last_seen = show; } if (patch.last_seen === 'everybody' && show) S.presence?.track({ at: Date.now() }); else S.presence?.untrack(); }
+  return true;
+}
+const pvRow = (icon, color, label, value, act) => `<div class="grow" data-pv="${act}">${icon ? `<div class="gi" style="background:${color}">${icon}</div>` : ''}<b>${label}</b><span class="gv">${value}</span><span class="chev">›</span></div>`;
+async function privacyPage(existing) {
+  const p = pvGet(); const passOn = !!store.get('mitro-pass-' + S.me.id);
+  const { count } = await sb.from('blocks').select('blocked_id', { count: 'exact', head: true }).eq('blocker_id', S.me.id);
+  const html = `<div class="pvtop"><button class="ic" data-x>‹</button><h3>Privacy and Security</h3><span></span></div>
+    <div class="group">${pvRow('⛔', '#FF3B30', 'Blocked Users', count || '', 'blocked')}${pvRow('🔐', '#34C759', 'Passcode Lock', passOn ? 'On' : 'Off', 'pass')}${pvRow('🔑', '#FF9500', 'Password', '', 'password')}${pvRow('⏱️', '#AF52DE', 'Auto-Delete Messages', (AD_OPTS.find((o) => o[0] === p.auto_delete_secs) || AD_OPTS[0])[1], 'autodel')}</div>
+    <p class="pvnote">Automatically delete messages for everyone after a period of time in all new chats you start.</p>
+    <p class="pvh">PRIVACY</p>
+    <div class="group">${pvRow('', '', 'Last Seen &amp; Online', PV_LBL[p.last_seen], 'last_seen')}${pvRow('', '', 'Messages', PV_LBL[p.messages], 'messages')}${pvRow('', '', 'Invites', PV_LBL[p.invites], 'invites')}${pvRow('', '', 'Find Me by Name', S.prof?.searchable !== false ? 'Everybody' : 'Nobody', 'search')}</div>
+    <p class="pvnote">You can restrict who can start a chat with you and who can add you to groups. "My Contacts" means people you already share a chat or group with.</p>
+    <p class="pvh">AUTOMATICALLY DELETE MY ACCOUNT</p>
+    <div class="group">${pvRow('', '', 'If Away For', (AWAY_OPTS.find((o) => o[0] === p.away_months) || AWAY_OPTS[0])[1], 'away')}</div>
+    <p class="pvnote">If you do not come online at least once within this period, your account will be deleted along with all messages and contacts.</p>
+    <div class="group">${pvRow('', '', 'Data Settings', '', 'data')}</div>
+    <p class="pvnote">🔒 Your settings are enforced on MITRO's servers, not just hidden in the app.</p>`;
+  const m = existing || modal(''); m.classList.add('pvmodal'); const sh = m.querySelector('.sheet'); sh.classList.add('pvsheet'); sh.innerHTML = html;
+  sh.querySelector('[data-x]').onclick = () => m.remove();
+  sh.querySelectorAll('[data-pv]').forEach((el) => (el.onclick = () => pvAction(el.dataset.pv, m)));
+}
+function pvChoice(title, opts, cur, note, onPick) {
+  const md = modal(`<h3>${title}</h3><div class="group" style="margin:8px 0">${opts.map(([v, l]) => `<div class="grow" data-v="${v}"><b>${l}</b><span class="gv" style="color:var(--p);font-size:18px">${String(v) === String(cur) ? '✓' : ''}</span></div>`).join('')}</div>${note ? `<p class="pvnote" style="margin:6px 2px">${note}</p>` : ''}`);
+  md.querySelectorAll('[data-v]').forEach((el) => (el.onclick = async () => { const v = el.dataset.v; md.remove(); await onPick(v); }));
+}
+async function pvAction(a, pm) {
+  const p = pvGet(); const back = () => privacyPage(pm); const ppl = [['everybody', 'Everybody'], ['contacts', 'My Contacts'], ['nobody', 'Nobody']];
+  if (a === 'blocked') return blockedList(pm);
+  if (a === 'pass') return passcodeSetup(pm);
+  if (a === 'data') return settingsAction('data');
+  if (a === 'password') return setPassword();
+  if (a === 'autodel') return pvChoice('⏱️ Auto-Delete Messages', AD_OPTS, p.auto_delete_secs, 'Applies to new chats and groups you start. Change the timer of an existing chat from its ⋮ menu.', async (v) => { if (await pvSave({ auto_delete_secs: +v })) { toast('Saved'); back(); } });
+  if (a === 'last_seen') return pvChoice('Who can see my Last Seen?', ppl, p.last_seen, 'If you choose "My Contacts" or "Nobody", your green online dot is hidden from everyone.', async (v) => { if (await pvSave({ last_seen: v })) { toast('Saved'); back(); } });
+  if (a === 'messages') return pvChoice('Who can start a chat with me?', ppl, p.messages, 'People you already chat with can always message you.', async (v) => { if (await pvSave({ messages: v })) { toast('Saved'); back(); } });
+  if (a === 'invites') return pvChoice('Who can add me to groups?', ppl, p.invites, '', async (v) => { if (await pvSave({ invites: v })) { toast('Saved'); back(); } });
+  if (a === 'search') return pvChoice('Who can find me by name or username?', [['1', 'Everybody'], ['0', 'Nobody']], S.prof?.searchable !== false ? '1' : '0', '', async (v) => { const searchable = v === '1'; const { error } = await sb.from('profiles').update({ searchable }).eq('id', S.me.id); if (error) return toast(friendly(error.message)); S.prof.searchable = searchable; toast('Saved'); back(); });
+  if (a === 'away') return pvChoice('Delete my account if away for…', AWAY_OPTS.map(([v, l]) => [v ?? '', l]), p.away_months ?? '', 'Off ("Never") unless you pick a period.', async (v) => { if (await pvSave({ away_months: v ? +v : null })) { toast('Saved'); back(); } });
+}
+async function blockedList(pm) {
+  const { data } = await sb.from('blocks').select('blocked_id, created_at').eq('blocker_id', S.me.id).order('created_at', { ascending: false });
+  const ids = (data || []).map((b) => b.blocked_id); let profs = [];
+  if (ids.length) profs = (await sb.from('profiles').select('id, display_name, username, avatar_url').in('id', ids)).data || [];
+  const md = modal(`<h3>⛔ Blocked Users</h3>${ids.length ? `<div class="group" style="margin:8px 0">${profs.map((u) => `<div class="grow" style="cursor:default">${av(nm(u), u.avatar_url, 36)}<b>${esc(nm(u))}${u.username ? `<br><span class="small">@${esc(u.username)}</span>` : ''}</b><button class="pillbtn" data-ub="${u.id}">Unblock</button></div>`).join('')}</div>` : '<p class="small">You haven\'t blocked anyone. Block someone from a chat\'s ⋮ menu.</p>'}<p class="pvnote" style="margin:6px 2px">Blocked people can't message you, call you, add you to groups or see your last seen.</p>`);
+  md.querySelectorAll('[data-ub]').forEach((b) => (b.onclick = async () => { const { error } = await sb.from('blocks').delete().eq('blocker_id', S.me.id).eq('blocked_id', b.dataset.ub); if (error) return toast(friendly(error.message)); toast('Unblocked'); md.remove(); blockedList(pm); if (pm?.isConnected) privacyPage(pm); loadConvs(); }));
+}
+async function blockUser(uid, name) {
+  const md = modal(`<h3>Block ${esc(name)}?</h3><p class="small">They won't be able to message you, add you to groups or see your last seen. They won't be told.</p><button class="btn" id="yb" style="background:#DC2626">Block</button><button class="ghost" id="nb">Cancel</button>`);
+  md.querySelector('#nb').onclick = () => md.remove();
+  md.querySelector('#yb').onclick = async () => { const { error } = await sb.from('blocks').insert({ blocker_id: S.me.id, blocked_id: uid }); md.remove(); if (error && !/duplicate/i.test(error.message)) return toast(friendly(error.message)); toast(name + ' is blocked'); loadConvs(); banner(); };
+}
+function pwSignIn(email = '') {
+  const m = modal(`<h3>🔑 Sign in with password</h3><p class="small">For accounts that have set a password in Settings → Privacy and Security → Password.</p>
+    <form id="pf"><input class="in" id="pe" type="email" placeholder="Email" autocomplete="username" value="${esc(email)}" required><input class="in" id="pp" type="password" placeholder="Password" autocomplete="current-password" style="margin-top:8px" required><div class="err" id="per"></div><button class="btn">Sign in</button></form>`);
+  m.querySelector('#pf').onsubmit = async (ev) => { ev.preventDefault(); const b = m.querySelector('#pf button'); b.disabled = true; const { error } = await sb.auth.signInWithPassword({ email: m.querySelector('#pe').value.trim().toLowerCase(), password: m.querySelector('#pp').value }); b.disabled = false; if (error) return (m.querySelector('#per').textContent = /invalid/i.test(error.message) ? 'Wrong email or password.' : error.message); m.remove(); };
+}
+function setPassword() {
+  const m = modal(`<h3>🔑 Password</h3><p class="small">Optional. Lets you sign in with email + password as well as with an email code or Google.</p>
+    <input class="in" id="np1" type="password" placeholder="New password (8+ characters)" autocomplete="new-password"><input class="in" id="np2" type="password" placeholder="Repeat password" autocomplete="new-password" style="margin-top:8px"><div class="err" id="npe"></div><button class="btn" id="nps">Save password</button>`);
+  m.querySelector('#nps').onclick = async () => { const a = m.querySelector('#np1').value, b = m.querySelector('#np2').value, er = m.querySelector('#npe'); if (a.length < 8) return (er.textContent = 'Use at least 8 characters.'); if (a !== b) return (er.textContent = "Passwords don't match."); const { error } = await sb.auth.updateUser({ password: a }); if (error) return (er.textContent = error.message); m.remove(); toast('Password saved'); };
+}
+// Passcode lock (stored only on this device; hashed)
+const passKey = () => 'mitro-pass-' + S.me.id;
+async function passHash(pin) { const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('mitro:' + S.me.id + ':' + pin)); return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, '0')).join(''); }
+function passcodeSetup(pm) {
+  const on = !!store.get(passKey());
+  const md = modal(`<h3>🔐 Passcode Lock</h3><p class="small">${on ? 'MITRO asks for your passcode when you open it on this device, and after 1 minute away.' : 'Lock MITRO on this device with a 4–6 digit passcode.'}</p>
+    ${on ? '<button class="btn" id="chg">Change Passcode</button><button class="ghost" id="off" style="color:#DC2626">Turn Passcode Off</button>' : '<input class="in" id="p1" type="password" inputmode="numeric" maxlength="6" placeholder="New passcode" autocomplete="new-password"><input class="in" id="p2" type="password" inputmode="numeric" maxlength="6" placeholder="Repeat passcode" style="margin-top:8px" autocomplete="new-password"><div class="err" id="er"></div><button class="btn" id="setp">Turn On</button>'}
+    <p class="pvnote" style="margin:8px 2px">If you forget it, sign out and sign in again — the passcode is only stored on this device.</p>`);
+  const done = () => { md.remove(); if (pm?.isConnected) privacyPage(pm); };
+  md.querySelector('#off')?.addEventListener('click', () => { localStorage.removeItem(passKey()); toast('Passcode off'); done(); });
+  md.querySelector('#chg')?.addEventListener('click', () => { localStorage.removeItem(passKey()); md.remove(); passcodeSetup(pm); });
+  md.querySelector('#setp')?.addEventListener('click', async () => { const a = md.querySelector('#p1').value, b = md.querySelector('#p2').value; const er = md.querySelector('#er'); if (!/^\d{4,6}$/.test(a)) return (er.textContent = 'Use 4–6 digits.'); if (a !== b) return (er.textContent = "Passcodes don't match."); store.set(passKey(), await passHash(a)); toast('Passcode on'); done(); });
+}
+function showLock() {
+  if (!S.me || !store.get(passKey()) || document.querySelector('.lockscr')) return;
+  const l = $(`<div class="lockscr"><img src="/assets/mitro-mark.svg" alt="" width="72" height="72"><h2>Enter Passcode</h2><input id="lp" type="password" inputmode="numeric" maxlength="6" autocomplete="off"><div class="err" id="le"></div><button class="ghost" id="lf">Forgot passcode? Sign out</button></div>`);
+  document.body.appendChild(l); const i = l.querySelector('#lp'); setTimeout(() => i.focus(), 50); let tries = 0;
+  i.oninput = async () => { if (i.value.length < 4) return; if ((await passHash(i.value)) === store.get(passKey())) { l.remove(); return; } if (i.value.length === 6 || (i.value.length >= 4 && tries++ > 30)) { l.querySelector('#le').textContent = 'Wrong passcode'; i.value = ''; i.animate([{ transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'none' }], 250); } };
+  i.onkeydown = async (e) => { if (e.key === 'Enter' && i.value.length >= 4 && (await passHash(i.value)) !== store.get(passKey())) { l.querySelector('#le').textContent = 'Wrong passcode'; i.value = ''; } };
+  l.querySelector('#lf').onclick = async () => { localStorage.removeItem(passKey()); l.remove(); await sb.auth.signOut(); };
+}
+let _hiddenAt = 0;
+document.addEventListener('visibilitychange', () => { if (document.hidden) _hiddenAt = Date.now(); else if (_hiddenAt && Date.now() - _hiddenAt > 60000) showLock(); });
+
+// ---------- Stories (24-hour status) ----------
+async function refreshStories() {
+  const el = root.querySelector('#st'); if (!el) return;
+  const [{ data: st }, { data: seen }] = await Promise.all([
+    sb.from('statuses').select('*, profiles(display_name, username, avatar_url)').gt('expires_at', new Date().toISOString()).order('created_at', { ascending: true }),
+    sb.from('status_views').select('status_id').eq('viewer_id', S.me.id)]);
+  const seenSet = new Set((seen || []).map((v) => v.status_id)), by = new Map();
+  for (const s of st || []) { const p = by.get(s.user_id) || { uid: s.user_id, name: s.user_id === S.me.id ? 'My Story' : nm(s.profiles), av: s.profiles?.avatar_url, items: [], unseen: 0 }; p.items.push(s); p.latest = s.created_at; if (s.user_id !== S.me.id && !seenSet.has(s.id)) p.unseen++; by.set(s.user_id, p); }
+  const box = root.querySelector('#st'); if (!box) return; box.innerHTML = '';
+  const mine = by.get(S.me.id);
+  const me = $(`<div class="story-i"><div class="ring${mine ? '' : ''}" style="border-color:${mine ? 'var(--p)' : 'transparent'}">${av(nm(S.prof), S.prof?.avatar_url)}</div>${mine ? '' : '<div class="plusb">+</div>'}<span>My Story</span></div>`);
+  me.onclick = () => (mine ? viewStatus(mine) : newStatus()); box.appendChild(me);
+  const others = [...by.values()].filter((p) => p.uid !== S.me.id).sort((a, b) => b.unseen - a.unseen || Date.parse(b.latest) - Date.parse(a.latest));
+  for (const p of others) { const r = $(`<div class="story-i"><div class="ring${p.unseen ? '' : ' seen'}">${av(p.name, p.av)}</div><span>${esc(p.name)}</span></div>`); r.onclick = () => viewStatus(p); box.appendChild(r); }
+  if (!others.length) box.appendChild($('<div class="small" style="align-self:center;max-width:220px">Stories from people you chat with appear here for 24 hours.</div>'));
+}
+function newStatus() {
+  const colors = ['#4F46E5', '#0EA5E9', '#10B981', '#F59E0B', '#EF4444', '#EC4899', '#8B5CF6', '#111827']; let bg = colors[0];
+  const md = modal(`<h3>New status</h3><textarea class="in" id="tx" rows="4" maxlength="700" placeholder="What's on your mind?" style="color:#fff;font-size:20px;font-weight:700;text-align:center;background:${bg}"></textarea>
+   <div class="colors">${colors.map((c, i) => `<button style="background:${c}" data-c="${c}" class="${i ? '' : 'on'}"></button>`).join('')}</div>
+   <input type="file" id="ph" accept="image/*" hidden><button class="btn" id="go">Post text status</button><button class="btn" id="pp" style="background:var(--card);color:var(--ink)">📷 Post a photo instead</button><button class="ghost" id="x">Cancel</button>`);
+  const tx = md.querySelector('#tx'); md.querySelector('#x').onclick = () => md.remove();
+  md.querySelectorAll('[data-c]').forEach((b) => (b.onclick = () => { bg = b.dataset.c; tx.style.background = bg; md.querySelectorAll('[data-c]').forEach((x) => x.classList.toggle('on', x === b)); }));
+  md.querySelector('#go').onclick = async () => { const body = tx.value.trim(); if (!body) return; const { error } = await sb.from('statuses').insert({ user_id: S.me.id, kind: 'text', body, bg }); if (error) return toast(friendly(error.message)); md.remove(); toast('Status posted'); refreshStories(); };
+  const ph = md.querySelector('#ph'); md.querySelector('#pp').onclick = () => ph.click();
+  ph.onchange = async () => {
+    const f = ph.files[0]; if (!f) return; md.remove(); toast('Checking & posting photo…');
+    try {
+      const blob = await toJpeg(f); const qp = `${S.me.id}/${crypto.randomUUID()}`;
+      const up = await sb.storage.from('quarantine').upload(qp, blob, { contentType: 'image/jpeg' }); if (up.error) throw new Error(up.error.message);
+      const { data, error } = await sb.functions.invoke('post-status', { body: { quarantinePath: qp, caption: tx.value.trim() || null } });
+      const msg = error ? (await error.context?.json?.().catch(() => null))?.error || error.message : data?.error; if (msg) throw new Error(msg);
+      toast('Status posted'); refreshStories();
+    } catch (e) { toast(friendly(String(e.message || e))); }
+  };
+}
+function viewStatus(p) {
+  let i = 0, timer; const mine = p.uid === S.me.id;
+  const el = $(`<div class="story"><div class="bars">${p.items.map(() => '<div><i></i></div>').join('')}</div><div class="sh">${av(p.name, p.av, 38)}<div style="flex:1"><b>${esc(p.name)}</b><div id="tt" style="font-size:12px;opacity:.8"></div></div>${mine ? '<button class="ic" id="vw" style="background:rgba(255,255,255,.15)">👁</button><button class="ic" id="dl" style="background:rgba(255,255,255,.15)">🗑</button>' : ''}<button class="ic" id="cl" style="background:rgba(255,255,255,.15)">✕</button></div><div class="sc" id="sc"></div><div class="cap" id="cp"></div></div>`);
+  document.body.appendChild(el);
+  const close = () => { clearTimeout(timer); el.remove(); refreshStories(); };
+  el.querySelector('#cl').onclick = close;
+  const show = async () => {
+    clearTimeout(timer); const s = p.items[i]; if (!s) return close();
+    el.querySelectorAll('.bars i').forEach((b, k) => { b.style.transition = 'none'; b.style.width = k < i ? '100%' : '0'; });
+    el.querySelector('#tt').textContent = ago(s.created_at); el.style.background = s.kind === 'text' ? s.bg || '#4F46E5' : '#000';
+    const sc = el.querySelector('#sc'); sc.innerHTML = s.kind === 'text' ? esc(s.body) : '<span class="small" style="color:#fff">Loading…</span>';
+    el.querySelector('#cp').textContent = s.kind === 'image' ? s.body || '' : '';
+    if (s.kind === 'image') sc.innerHTML = `<img src="${await signed('status-media', s.file_path)}" alt="">`;
+    if (!mine) sb.from('status_views').upsert({ status_id: s.id, viewer_id: S.me.id }, { ignoreDuplicates: true }).then(() => {});
+    requestAnimationFrame(() => { const b = el.querySelectorAll('.bars i')[i]; b.style.transition = 'width 5s linear'; b.style.width = '100%'; });
+    timer = setTimeout(() => { i++; show(); }, 5000);
+  };
+  el.querySelector('#sc').onclick = (e) => { if (e.clientX < window.innerWidth / 3) i = Math.max(0, i - 1); else i++; show(); };
+  if (mine) {
+    el.querySelector('#vw').onclick = async () => { clearTimeout(timer); const { data } = await sb.from('status_views').select('viewed_at, profiles:viewer_id(display_name, username)').eq('status_id', p.items[i].id); const md = modal(`<h3>Viewed by ${(data || []).length}</h3>${(data || []).map((v) => `<div class="row" style="padding:6px 0"><div class="meta"><b>${esc(nm(v.profiles))}</b></div><span class="small">${tm(v.viewed_at)}</span></div>`).join('') || '<p class="small">No views yet</p>'}`); md.style.zIndex = 35; md.addEventListener('click', (e) => e.target === md && show()); };
+    el.querySelector('#dl').onclick = async () => { clearTimeout(timer); await sb.from('statuses').delete().eq('id', p.items[i].id); p.items.splice(i, 1); toast('Status deleted'); show(); };
+  }
+  show();
+}
+
+// ---------- Profile photo ----------
+function setPhoto() {
+  const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*';
+  inp.onchange = async () => {
+    const f = inp.files[0]; if (!f) return; toast('Checking & saving photo…');
+    try {
+      const img = await createImageBitmap(f); const s = Math.min(img.width, img.height); const c = document.createElement('canvas'); c.width = c.height = 512;
+      c.getContext('2d').drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, 512, 512);
+      const blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', 0.88)); const qp = `${S.me.id}/${crypto.randomUUID()}`;
+      const up = await sb.storage.from('quarantine').upload(qp, blob, { contentType: 'image/jpeg' }); if (up.error) throw new Error(up.error.message);
+      const { data, error } = await sb.functions.invoke('set-avatar', { body: { quarantinePath: qp } });
+      const msg = error ? (await error.context?.json?.().catch(() => null))?.error || error.message : data?.error; if (msg) throw new Error(msg);
+      S.prof.avatar_url = data?.avatar_url || S.prof.avatar_url; toast('Profile photo updated'); if (S.tab === 'settings') settingsSide();
+    } catch (e) { toast(friendly(String(e.message || e))); }
+  };
+  inp.click();
+}
+async function removePhoto() { const { error } = await sb.functions.invoke('set-avatar', { body: { remove: true } }); if (error) return toast('Could not remove photo'); S.prof.avatar_url = null; toast('Photo removed'); if (S.tab === 'settings') settingsSide(); }
+
+// ---------- Emoji & stickers ----------
+const EMO = {
+  '😀 Smileys': '😀 😃 😄 😁 😆 😅 😂 🤣 😊 😇 🙂 🙃 😉 😌 😍 🥰 😘 😗 😋 😛 😜 🤪 😎 🤩 🥳 😏 😒 😞 😔 😟 😕 🙁 😣 😖 😫 😩 🥺 😢 😭 😤 😠 😡 🤯 😳 🥵 🥶 😱 😨 😰 😥 🤗 🤔 🤭 🤫 😶 😐 😑 😬 🙄 😯 😴 🤤 😪 😵 🤐 🥴 🤢 🤮 🤧 😷 🤒 🤕',
+  '👍 Gestures': '👍 👎 👌 ✌️ 🤞 🤟 🤘 🤙 👈 👉 👆 👇 ☝️ ✋ 🤚 🖐️ 🖖 👋 🤝 🙏 💪 👏 🙌 👐 🤲 ✍️ 💅 🤳',
+  '❤️ Hearts': '❤️ 🧡 💛 💚 💙 💜 🖤 🤍 🤎 💔 ❣️ 💕 💞 💓 💗 💖 💘 💝 💯 ✨ 🔥 🎉 🎊 🎁 🎈 ⭐ 🌟 💫 ☀️ 🌈',
+  '🐶 Nature': '🐶 🐱 🐭 🐹 🐰 🦊 🐻 🐼 🐨 🐯 🦁 🐮 🐷 🐸 🐵 🐔 🐧 🐦 🦄 🐝 🦋 🌸 🌹 🌻 🌺 🌴 🌵 🍀 🍁 🌙',
+  '🍔 Food': '🍎 🍊 🍋 🍌 🍉 🍇 🍓 🥭 🍍 🥥 🍅 🌶️ 🌽 🍔 🍟 🍕 🌭 🥪 🌮 🍜 🍛 🍚 🍣 🍩 🍪 🎂 🍰 🍫 🍿 ☕ 🍵 🥤',
+  '⚽ Activity': '⚽ 🏏 🏀 🏈 🎾 🏐 🎱 🏓 🏸 🥊 🎯 🎮 🎲 🎸 🎧 🎤 🎬 🏆 🥇 🚗 ✈️ 🚀 🏖️ 🏔️ 🕌 🛕 🏠 💻 📱 📷',
+};
+const STK = { '🐱 Cats': '😺 😸 😹 😻 😼 😽 🙀 😿 😾', '🎉 Party': '🎉 🥳 🎊 🎂 🍾 🥂 🎁 🎈 🪅', '💖 Love': '💖 💘 💝 💗 💞 💕 😍 🥰 😘', '🔥 Hype': '🔥 💯 🚀 ⚡ 🤩 🏆 👑 💎 ✨', '😂 LOL': '😂 🤣 😆 😹 🙈 🤪 😜 🤡 💀' };
+function isJumbo(t) { const s = (t || '').trim(); if (!s || s.length > 16) return false; try { return /^(\p{Extended_Pictographic}|\p{Emoji_Modifier}|‍|️|\s)+$/u.test(s) && [...new Intl.Segmenter().segment(s.replace(/\s/g, ''))].length <= 3; } catch { return false; } }
+function emojiPanel(c, t) {
+  const old = root.querySelector('.epanel'); if (old) return old.remove();
+  const cats = { ...Object.fromEntries(Object.keys(EMO).map((k) => [k, ['e', EMO[k]]])), ...Object.fromEntries(Object.keys(STK).map((k) => ['🎨 ' + k.slice(3), ['s', STK[k]]])) };
+  const p = $(`<div class="epanel"><div class="etabs">${Object.keys(cats).map((k, i) => `<button data-k="${esc(k)}" class="${i ? '' : 'on'}">${esc(k)}</button>`).join('')}</div><div class="egrid" id="eg"></div></div>`);
+  const show = (k) => { const [type, list] = cats[k]; const g = p.querySelector('#eg'); g.className = 'egrid' + (type === 's' ? ' big' : ''); g.innerHTML = list.split(' ').map((e) => `<button>${e}</button>`).join('');
+    p.querySelectorAll('.etabs button').forEach((b) => b.classList.toggle('on', b.dataset.k === k));
+    g.querySelectorAll('button').forEach((b) => (b.onclick = async () => {
+      if (type === 'e') { const pos = t.selectionStart ?? t.value.length; t.value = t.value.slice(0, pos) + b.textContent + t.value.slice(pos); t.focus(); t.selectionStart = t.selectionEnd = pos + b.textContent.length; return; }
+      p.remove(); const { data: sent, error } = await sb.from('messages').insert({ conversation_id: c.id, sender_id: S.me.id, kind: 'text', body: b.textContent, reply_to: S.reply?.id ?? null }).select().single(); if (error) toast(friendly(error.message)); else if (sent && S.cur?.id === c.id) { S.msgs.set(sent.id, sent); renderMsgs(true); loadConvsSoon(); } S.reply = null; replyBar();
+    })); };
+  p.querySelectorAll('.etabs button').forEach((b) => (b.onclick = () => show(b.dataset.k)));
+  root.querySelector('#cf').before(p); show(Object.keys(cats)[0]);
+}
+
+// ---------- AI Scam Shield (instant, on-device) ----------
+const SH_SHORT = /^(bit\.ly|tinyurl\.com|cutt\.ly|rb\.gy|t\.ly|is\.gd|shorturl\.at|tiny\.cc|ow\.ly|rebrand\.ly|s\.id|v\.gd|t\.co|goo\.gl|shorte\.st|bl\.ink|qr\.ae|wa\.link|linktr\.ee)$/i;
+const SH_TLD = /\.(xyz|top|click|live|buzz|icu|monster|rest|shop|online|site|info|cn|tk|ml|ga|cf|gq|work|loan|win|bid|vip|cyou|sbs|cfd|lol|pw|club|fun|space|website|store|ru)$/i;
+const SH_BRANDS = { sbi: ['sbi.co.in', 'onlinesbi.sbi', 'sbi.bank.in'], hdfc: ['hdfcbank.com', 'hdfc.bank.in'], icici: ['icicibank.com', 'icici.bank.in'], axis: ['axisbank.com', 'axis.bank.in'], kotak: ['kotak.com'], paytm: ['paytm.com'], phonepe: ['phonepe.com'], gpay: ['pay.google.com', 'google.com'], amazon: ['amazon.in', 'amazon.com'], flipkart: ['flipkart.com'], irctc: ['irctc.co.in'], aadhaar: ['uidai.gov.in', 'myaadhaar.uidai.gov.in'], uidai: ['uidai.gov.in'], incometax: ['incometax.gov.in'], epfo: ['epfindia.gov.in'], npci: ['npci.org.in'], rbi: ['rbi.org.in'], indiapost: ['indiapost.gov.in'], fedex: ['fedex.com'], bluedart: ['bluedart.com'], delhivery: ['delhivery.com'], jio: ['jio.com'], airtel: ['airtel.in'], bescom: ['bescom.co.in'], tneb: ['tnebltd.gov.in'], whatsapp: ['whatsapp.com', 'wa.me'], netflix: ['netflix.com'] };
+const SH_RULES = [
+  [/\b(kyc|e-?kyc)\b.{0,60}\b(updat|expir|pending|block|suspend|verify|complete)/i, 35, 'Asks you to update KYC — banks never do this by chat link'],
+  [/\b(pan|aadhaa?r|aadhar)\b.{0,50}\b(link|updat|block|suspend|verify|expir)/i, 30, 'PAN/Aadhaar "update" — a common fake-link scam'],
+  [/\b(account|a\/c|card|sim|wallet|upi)\b.{0,40}\b(block|suspend|deactivat|freez|clos)/i, 25, 'Threatens to block your account or SIM'],
+  [/\b(share|send|tell|forward)\b.{0,30}\b(otp|pin|cvv|password|one.?time)\b|\botp\b.{0,40}\b(share|send|tell)/i, 40, 'Asks for an OTP / PIN / CVV — never share these'],
+  [/\b(enter|type)\b.{0,25}\b(upi )?pin\b.{0,40}\b(receive|get|credit)|\bcollect request\b|\bscan\b.{0,25}\b(qr)\b.{0,40}\b(receive|get)/i, 40, 'UPI trick — you never enter a PIN to RECEIVE money'],
+  [/\b(electricity|power|light|bescom|tneb|apspdcl|tsspdcl|msedcl)\b.{0,80}\b(disconnect|cut|tonight|today|9[:.]?30)/i, 45, 'Electricity-disconnection threat scam'],
+  [/\b(parcel|courier|package|consignment|shipment)\b.{0,80}\b(held|seized|customs|illegal|drugs|narcotic|returned|address)/i, 30, 'Fake courier / customs parcel scam'],
+  [/\b(digital arrest|arrest warrant|cbi|narcotics|ncb|ed officer|enforcement directorate|cyber ?crime department|trai)\b.{0,80}\b(case|arrest|warrant|video call|skype|money laundering|disconnect)/i, 45, '"Digital arrest" / fake police — real police never do this on calls'],
+  [/\b(work from home|part.?time (job|work)|daily (earn|income|payout)|earn\s*(rs\.?|₹|inr)?\s*\d{3,}.{0,20}(per|a|\/)\s*(day|hour)|like (youtube )?videos|rate (hotels|movies|products)|telegram task|prepaid task)/i, 45, 'Easy-money job / task scam'],
+  [/\b(guarantee[d]?|assured|fixed|double)\b.{0,40}\b(return|profit|income|money)|\b\d{2,3}\s*%\s*(daily|weekly|monthly) (return|profit)|\b(crypto|bitcoin|usdt|forex|trading)\b.{0,60}\b(profit|return|invest|group)/i, 30, 'Promises guaranteed / unreal returns'],
+  [/\b(lottery|lucky draw|jackpot|kbc|kaun banega|you (have )?won|winner|prize money|congratulations[!.,]? you)/i, 35, 'Lottery / prize you never entered'],
+  [/\b(instant|pre.?approved|without (cibil|documents))\b.{0,30}\bloan\b|\bloan\b.{0,40}\b(approved|sanctioned).{0,30}\b(click|download|apply now)/i, 25, 'Instant-loan app scam'],
+  [/\.apk\b|download (this|the) app.{0,40}(apk|link)|install .{0,20}(any ?desk|team ?viewer|quick ?support|rustdesk)/i, 40, 'Asks you to install an app / screen-share — can steal your money'],
+  [/\b(refund|cashback|reward points?|redeem)\b.{0,60}\b(click|link|claim|expire|today)/i, 20, 'Fake refund / reward link'],
+  [/\b(new number|changed my number|my phone is (lost|broken))\b.{0,80}\b(send|transfer|pay|urgent|money|gpay|phonepe|upi)/i, 35, 'Someone pretending to be family on a "new number"'],
+  [/\b(customer care|helpline|toll.?free)\b.{0,40}(\+?91[\s-]?)?[6-9]\d{9}/i, 15, 'Unofficial "customer care" number'],
+  [/\b(urgent(ly)?|immediately|within (2|24|48) ?(hours|hrs)|today only|last (chance|warning|reminder)|act now|final notice)\b/i, 10, 'Creates panic / urgency'],
+  [/\b(video call|nude|private (video|photo)s?)\b.{0,60}\b(viral|leak|share with|pay|send money)/i, 45, 'Sextortion threat — do not pay, report it'],
+];
+const SH_ADVICE = 'Don\'t click links, share OTP/PIN, install apps or send money. Banks, police and government never ask for these on chat. Lost money? Call 1930 (Cyber Crime Helpline) or visit cybercrime.gov.in.';
+function shieldOn() { return store.get('mitro-shield') !== 'off'; }
+function urlsIn(text) { return (String(text || '').match(/\b((?:https?:\/\/|www\.)[^\s<>"']+|[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|in|net|org|co|xyz|top|click|live|buzz|icu|shop|online|site|info|ly|gl|ee|me|io|app|link|cn|tk|ru|club|store|website|space|fun|vip|win)(?:\/[^\s<>"']*)?)/gi) || []).slice(0, 10); }
+function urlRisk(u) {
+  let host = ''; const reasons = []; let score = 0;
+  try { host = new URL(/^https?:/i.test(u) ? u : 'http://' + u).hostname.toLowerCase(); } catch { return { score: 0, reasons }; }
+  const bare = host.replace(/^www\./, '');
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(bare)) { score += 35; reasons.push('Link goes to a raw IP address'); }
+  if (bare.startsWith('xn--') || bare.includes('.xn--')) { score += 35; reasons.push('Link uses look-alike letters'); }
+  if (SH_SHORT.test(bare)) { score += 20; reasons.push('Shortened link hides the real website'); }
+  if (SH_TLD.test(bare)) { score += 25; reasons.push('Link uses a web address type common in scams'); }
+  if ((bare.match(/-/g) || []).length >= 3) { score += 10; reasons.push('Odd, long website name'); }
+  for (const [brand, official] of Object.entries(SH_BRANDS)) {
+    if (bare.includes(brand) && !official.some((d) => bare === d || bare.endsWith('.' + d))) { score += 40; reasons.push(`Pretends to be ${brand.toUpperCase()} but isn't their real website`); break; }
+  }
+  if (/^http:\/\//i.test(u)) score += 5;
+  return { score, reasons, host: bare };
+}
+function scanText(text) {
+  const t = String(text || ''); if (t.length < 8) return { level: 'safe', score: 0, reasons: [] };
+  let score = 0; const reasons = [];
+  for (const [re, w, why] of SH_RULES) if (re.test(t)) { score += w; reasons.push(why); }
+  const urls = urlsIn(t);
+  for (const u of urls) { const r = urlRisk(u); if (r.score) { score += r.score; reasons.push(...r.reasons); } }
+  if (urls.length && score >= 10) { score += 10; reasons.push('Has a link together with warning signs'); }
+  if (/(₹|rs\.?|inr)\s?[\d,]{4,}/i.test(t) && score >= 20) score += 5;
+  const uniq = [...new Set(reasons)].slice(0, 5);
+  return { level: score >= 45 ? 'scam' : score >= 25 ? 'suspicious' : 'safe', score: Math.min(100, score), reasons: uniq };
+}
+function shieldBadge(r) { return r.level === 'safe' ? '' : `<div class="shield ${r.level === 'scam' ? 's-scam' : 's-sus'}" data-sh="1">🛡️ <b>${r.level === 'scam' ? 'Likely scam' : 'Be careful'}</b> · ${esc(r.reasons[0] || 'Looks suspicious')} <u>Why?</u></div>`; }
+function linkify(html) { return html.replace(/\b((?:https?:\/\/|www\.)[^\s<>"']+)/gi, (u) => `<a href="#" class="ulink" data-u="${u}">${u}</a>`); }
+function shieldSheet(text, local) {
+  const r = local || scanText(text);
+  const col = r.level === 'scam' ? '#DC2626' : r.level === 'suspicious' ? '#D97706' : '#16A34A';
+  const md = modal(`<h3>🛡️ MITRO Scam Shield</h3>
+    <div style="border-radius:14px;padding:12px 14px;background:${col}15;border:1px solid ${col}55"><b style="color:${col};font-size:18px">${r.level === 'scam' ? '⚠️ Likely a scam' : r.level === 'suspicious' ? '⚠️ Be careful' : '✅ No scam signs found'}</b>
+    ${r.reasons.length ? `<ul style="margin:8px 0 0;padding-left:18px;line-height:1.5">${r.reasons.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p class="small" style="margin:6px 0 0">The instant check found nothing risky — still never share OTP/PIN.</p>'}</div>
+    <p class="small" style="margin-top:12px">${SH_ADVICE}</p>
+    <div id="ai"></div><button class="btn" id="ask">✨ Check with AI</button>
+    <div style="display:flex;gap:8px"><a class="btn" style="flex:1;text-align:center;text-decoration:none;background:var(--card);color:var(--ink)" href="tel:1930">📞 Call 1930</a><a class="btn" style="flex:1;text-align:center;text-decoration:none;background:var(--card);color:var(--ink)" href="https://cybercrime.gov.in" target="_blank" rel="noopener">Report online</a></div>
+    <p class="small">The instant check runs on your device. "Check with AI" sends only this message to MITRO's AI to analyse it.</p>`);
+  md.querySelector('#ask').onclick = async (e) => {
+    e.target.disabled = true; e.target.textContent = 'Checking…';
+    const { data, error } = await sb.functions.invoke('scam-check', { body: { text: String(text).slice(0, 4000) } });
+    let msg = error ? (await error.context?.json?.().catch(() => null))?.error || error.message : data?.error;
+    e.target.remove();
+    const box = md.querySelector('#ai');
+    if (msg) { box.innerHTML = `<p class="small" style="margin-top:12px">${/AI_UNAVAILABLE/.test(msg) ? 'AI deep check switches on soon. The instant check above already protects you.' : /DAILY_LIMIT/.test(msg) ? 'You have used today\'s AI checks. The instant check still works.' : esc(msg)}</p>`; return; }
+    const c = data.verdict === 'scam' ? '#DC2626' : data.verdict === 'suspicious' ? '#D97706' : '#16A34A';
+    box.innerHTML = `<div style="margin-top:12px;border-radius:14px;padding:12px 14px;border:1px dashed ${c}"><b style="color:${c}">✨ AI says: ${data.verdict === 'scam' ? 'Scam' : data.verdict === 'suspicious' ? 'Suspicious' : 'Looks safe'}${data.category ? ' — ' + esc(data.category) : ''}</b> <span class="small">(${data.confidence}% sure)</span>
+      ${data.reasons?.length ? `<ul style="margin:6px 0 0;padding-left:18px">${data.reasons.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}${data.advice ? `<p class="small" style="margin:6px 0 0">${esc(data.advice)}</p>` : ''}</div>`;
+  };
+}
+function scamChecker() {
+  const md = modal(`<h3>🛡️ Check any message</h3><p class="small" style="margin-top:0">Got a suspicious SMS, WhatsApp forward or email? Paste it here.</p>
+    <textarea class="in" id="sx" rows="6" maxlength="4000" placeholder="Paste the message or link…"></textarea><button class="btn" id="go">Check now</button>
+    <div class="toggle"><span>Warn me about scam messages in chats</span><input type="checkbox" id="on" ${shieldOn() ? 'checked' : ''} style="width:22px;height:22px"></div>`);
+  md.querySelector('#on').onchange = (e) => { store.set('mitro-shield', e.target.checked ? 'on' : 'off'); toast(e.target.checked ? 'Scam Shield on' : 'Scam Shield off'); if (S.cur) renderMsgs(false); };
+  md.querySelector('#go').onclick = () => { const t = md.querySelector('#sx').value.trim(); if (!t) return; md.remove(); shieldSheet(t); };
+}
+function openLink(u) {
+  const r = urlRisk(u); const href = /^https?:/i.test(u) ? u : 'https://' + u;
+  if (shieldOn() && r.score >= 20) {
+    const md = modal(`<h3>🛡️ Wait — risky link</h3><p><b>${esc(r.host || u)}</b></p><ul style="padding-left:18px">${r.reasons.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><p class="small">${SH_ADVICE}</p><button class="btn" id="bk">Go back (recommended)</button><button class="ghost" id="op" style="color:#DC2626">Open anyway</button>`);
+    md.querySelector('#bk').onclick = () => md.remove(); md.querySelector('#op').onclick = () => { md.remove(); window.open(href, '_blank', 'noopener'); };
+  } else window.open(href, '_blank', 'noopener');
+}
+
+// ---------- Deep link: /app/#c/<handle> opens a public channel ----------
+async function deepLink() {
+  const m = location.hash.match(/^#c\/([a-z0-9_]{4,32})$/); if (!m) return;
+  history.replaceState(null, '', location.pathname);
+  const { data } = await sb.rpc('search_channels', { q: m[1] }); const c = (data || []).find((x) => x.handle === m[1]); if (!c) return toast('Channel not found');
+  if (!c.joined) { if (!confirm(`Join the channel "${c.title}"?`)) return; const { error } = await sb.rpc('join_channel', { conv: c.id }); if (error) return toast(friendly(error.message)); }
+  openById(c.id);
+}
+
+// ================= v13: calls, push notifications, reminders =================
+const VAPID = 'BA8dmgs9Xnyhvxi-TG6jgyUaKixKHTvL6_F166zJVODnxHNI396Gfv2Za6O5K5pw1V_yP6jDKjUqT-qMpDI-LSw';
+const ICE = { iceServers: [{ urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302', 'stun:stun.cloudflare.com:3478'] }] };
+const CALL_ERR = { NOT_ALLOWED: "You can't call this person", RATE_LIMIT: 'Too many calls — try again later', GROUP_CALLS_SOON: 'Group calls are coming soon', NO_PEER: 'Nobody to call in this chat', CALL_GONE: 'This call has ended' };
+const callErr = (m) => { for (const k in CALL_ERR) if (String(m).includes(k)) return CALL_ERR[k]; return friendly(String(m)); };
+const b64u = (s) => { const p = '='.repeat((4 - (s.length % 4)) % 4); const r = atob((s + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(r, (c) => c.charCodeAt(0)); };
+
+// ---------- Push notifications ----------
+const pushOk = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+async function enablePush(ask) {
+  if (!pushOk()) return 'unsupported';
+  let perm = Notification.permission;
+  if (perm === 'default' && ask) perm = await Notification.requestPermission();
+  if (perm !== 'granted') return perm;
+  try {
+    const reg = await navigator.serviceWorker.register('/app/sw.js', { scope: '/app/' });
+    await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(VAPID) });
+    const j = sub.toJSON();
+    await sb.rpc('save_push_sub', { ep: j.endpoint, key_p256dh: j.keys.p256dh, key_auth: j.keys.auth });
+    return 'granted';
+  } catch (e) { console.warn('push', e); return 'error'; }
+}
+function notifBanner() {
+  const page = root.querySelector('#page'); if (!page || !pushOk() || Notification.permission !== 'default' || store.get('mitro-nb-x')) return;
+  if (page.querySelector('.nbanner')) return;
+  const b = $(`<div class="nbanner"><span>🔔 Turn on notifications so you never miss a message or call</span><button class="on">Turn on</button><button class="x" aria-label="Close">✕</button></div>`);
+  b.querySelector('.on').onclick = async () => { const r = await enablePush(true); b.remove(); toast(r === 'granted' ? '🔔 Notifications are on' : r === 'denied' ? 'Notifications are blocked — allow them in your phone settings' : 'Notifications not available on this device'); };
+  b.querySelector('.x').onclick = () => { store.set('mitro-nb-x', '1'); b.remove(); };
+  page.prepend(b);
+}
+function notifSettings() {
+  const st = !pushOk() ? 'Not supported on this browser. On iPhone, add MITRO to your Home Screen first (Share → Add to Home Screen).' : Notification.permission === 'granted' ? '✅ On for this device' : Notification.permission === 'denied' ? '⛔ Blocked — allow notifications for MITRO in your phone settings' : 'Off';
+  const md = modal(`<h3>🔔 Notifications</h3><p>Messages, calls and reminders arrive as notifications — even when MITRO is closed.</p><p class="small">Status: <b>${st}</b></p>
+    ${pushOk() && Notification.permission !== 'denied' ? '<button class="btn" id="pon">Turn on / refresh notifications</button>' : ''}<button class="ghost" id="ptest">Send me a test reminder</button>
+    <p class="small">Mute any chat from its ⋮ menu.</p>`);
+  md.querySelector('#pon')?.addEventListener('click', async () => { const r = await enablePush(true); md.remove(); toast(r === 'granted' ? '🔔 Notifications are on' : 'Could not turn on notifications (' + r + ')'); });
+  md.querySelector('#ptest').onclick = async () => {
+    const { error } = await sb.from('reminders').insert({ user_id: S.me.id, note: 'This is your test reminder from MITRO 👋', due_at: new Date(Date.now() + 60e3).toISOString() });
+    md.remove(); toast(error ? friendly(error.message) : '⏰ Test reminder in about 1 minute');
+  };
+}
+
+// ---------- Reminders ----------
+function remindMenu(m) {
+  const who = m.sender_id === S.me.id ? 'You' : (S.people.get?.(m.sender_id) ? nm(S.people.get(m.sender_id)) : S.cur?.name || '');
+  const text = m.kind === 'text' ? bodyOf(m) : m.kind === 'image' ? '📷 Photo' : m.kind === 'voice' ? '🎤 Voice message' : (m.file_name || 'File');
+  const at = (h, min = 0, addDay = 0) => { const d = new Date(); d.setDate(d.getDate() + addDay); d.setHours(h, min, 0, 0); return d; };
+  const tonight = at(20) > new Date() ? at(20) : at(20, 0, 1);
+  const opts = [['In 20 minutes', new Date(Date.now() + 20 * 60e3)], ['In 1 hour', new Date(Date.now() + 3600e3)], ['In 3 hours', new Date(Date.now() + 3 * 3600e3)], ['Tonight 8 PM', tonight], ['Tomorrow 9 AM', at(9, 0, 1)]];
+  const md = modal(`<h3>⏰ Remind me</h3><p class="small">${esc((who ? who + ': ' : '') + String(text || '').slice(0, 120))}</p>
+    ${opts.map((o, i) => `<button class="act" data-i="${i}">${o[0]} <span class="small">· ${o[1].toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' })}</span></button>`).join('')}
+    <label class="small" style="display:block;margin-top:10px">Pick a date &amp; time</label><input class="in" type="datetime-local" id="rd"><button class="btn" id="rs">Set reminder</button>`);
+  const save = async (d) => {
+    if (!(d > new Date())) return toast('Pick a time in the future');
+    const note = ((who ? who + ': ' : '') + String(text || 'Message')).slice(0, 480) + (S.cur?.name ? ' — in ' + S.cur.name : '');
+    const { error } = await sb.from('reminders').insert({ user_id: S.me.id, conversation_id: S.cur?.id || null, message_id: m.id > 0 ? m.id : null, note: note.slice(0, 500), due_at: d.toISOString() });
+    md.remove(); if (error) return toast(friendly(error.message));
+    toast('⏰ Reminder set for ' + d.toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' }));
+    if (pushOk() && Notification.permission === 'default') enablePush(true);
+  };
+  md.querySelectorAll('[data-i]').forEach((b) => (b.onclick = () => save(opts[+b.dataset.i][1])));
+  md.querySelector('#rs').onclick = () => { const v = md.querySelector('#rd').value; if (!v) return toast('Pick a date and time'); save(new Date(v)); };
+}
+
+// ---------- Voice & video calls (WebRTC, 1:1) ----------
+const CALL = { pc: null, id: null, role: null, local: null, kind: null, conv: null, ui: null, t0: 0, tick: null, ring: null, noAns: null, incoming: null, connected: false };
+const isDM = (c) => c && !c.is_group && c.kind !== 'saved' && c.kind !== 'channel';
+function gatherDone(pc) {
+  return new Promise((res) => {
+    if (pc.iceGatheringState === 'complete') return res();
+    const done = () => { if (pc.iceGatheringState === 'complete') res(); };
+    pc.addEventListener('icegatheringstatechange', done); setTimeout(res, 2500);
+  });
+}
+function tone(kind) {
+  stopTone();
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)(); const g = ac.createGain(); g.gain.value = 0; g.connect(ac.destination);
+    const o1 = ac.createOscillator(), o2 = ac.createOscillator(); o1.frequency.value = kind === 'ring' ? 440 : 425; o2.frequency.value = kind === 'ring' ? 480 : 425;
+    o1.connect(g); o2.connect(g); o1.start(); o2.start();
+    const beat = () => { const t = ac.currentTime; g.gain.setValueAtTime(kind === 'ring' ? 0.18 : 0.07, t); g.gain.setValueAtTime(0, t + (kind === 'ring' ? 1.2 : 1.0)); if (kind === 'ring') navigator.vibrate?.([600, 300, 600]); };
+    beat(); const iv = setInterval(beat, kind === 'ring' ? 3000 : 4000);
+    CALL.ring = () => { clearInterval(iv); try { o1.stop(); o2.stop(); ac.close(); } catch {} navigator.vibrate?.(0); };
+  } catch { CALL.ring = null; }
+}
+function stopTone() { if (CALL.ring) { CALL.ring(); CALL.ring = null; } }
+const fmt = (s) => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+function callStatus(t) { const el = CALL.ui?.querySelector('#cst'); if (el) el.textContent = t; }
+
+function callUI(peer, kind, status) {
+  CALL.ui?.remove();
+  const ui = $(`<div class="callv ${kind}"><video id="rv" autoplay playsinline></video><video id="lv" autoplay playsinline muted></video>
+    <div class="ctop">${av(peer.name, peer.avatar, 96)}<b>${esc(peer.name)}</b><span id="cst">${esc(status)}</span><small>🔒 Private ${kind} call</small></div>
+    <div class="cbar"><button id="cmu" title="Mute">🎤</button>${kind === 'video' ? '<button id="ccam" title="Camera">📷</button><button id="cflip" title="Switch camera">🔄</button>' : '<button id="cspk" title="Speaker">🔊</button>'}<button id="cend" class="end" title="End call">📞</button></div></div>`);
+  document.body.appendChild(ui); CALL.ui = ui;
+  if (CALL.local) ui.querySelector('#lv').srcObject = CALL.local;
+  ui.querySelector('#cend').onclick = () => hangup();
+  ui.querySelector('#cmu').onclick = (e) => { const a = CALL.local?.getAudioTracks()[0]; if (!a) return; a.enabled = !a.enabled; e.currentTarget.classList.toggle('off', !a.enabled); e.currentTarget.textContent = a.enabled ? '🎤' : '🔇'; };
+  ui.querySelector('#ccam')?.addEventListener('click', (e) => { const v = CALL.local?.getVideoTracks()[0]; if (!v) return; v.enabled = !v.enabled; e.currentTarget.classList.toggle('off', !v.enabled); });
+  ui.querySelector('#cflip')?.addEventListener('click', flipCam);
+  ui.querySelector('#cspk')?.addEventListener('click', (e) => { const v = ui.querySelector('#rv'); v.muted = !v.muted; e.currentTarget.classList.toggle('off', v.muted); });
+  return ui;
+}
+async function flipCam() {
+  try {
+    const cur = CALL.local.getVideoTracks()[0]; const face = cur.getSettings().facingMode === 'environment' ? 'user' : 'environment';
+    const ns = await navigator.mediaDevices.getUserMedia({ video: { facingMode: face } }); const nt = ns.getVideoTracks()[0];
+    const sender = CALL.pc.getSenders().find((s) => s.track?.kind === 'video'); await sender?.replaceTrack(nt);
+    CALL.local.removeTrack(cur); cur.stop(); CALL.local.addTrack(nt); CALL.ui.querySelector('#lv').srcObject = CALL.local;
+  } catch { toast('Could not switch camera'); }
+}
+function newPC() {
+  const pc = new RTCPeerConnection(ICE);
+  pc.ontrack = (e) => { const v = CALL.ui?.querySelector('#rv'); if (v && v.srcObject !== e.streams[0]) { v.srcObject = e.streams[0]; v.play?.().catch(() => {}); } };
+  pc.onconnectionstatechange = () => {
+    if (pc.connectionState === 'connected' && !CALL.connected) {
+      CALL.connected = true; stopTone(); clearTimeout(CALL.noAns); CALL.ui?.classList.add('live'); CALL.t0 = Date.now();
+      CALL.tick = setInterval(() => callStatus(fmt(Math.round((Date.now() - CALL.t0) / 1000))), 1000);
+    }
+    if (pc.connectionState === 'failed') { toast('Call connection lost'); hangup(); }
+  };
+  return pc;
+}
+async function getMedia(kind) {
+  return navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: kind === 'video' ? { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } : false });
+}
+async function startCall(kind) {
+  const c = S.cur; if (!isDM(c)) return toast('Calls work in one-to-one chats');
+  if (CALL.pc || CALL.incoming) return toast('You are already in a call');
+  if (!navigator.mediaDevices?.getUserMedia || !window.RTCPeerConnection) return toast('Calls are not supported on this browser');
+  try { CALL.local = await getMedia(kind); } catch { return toast(`Allow microphone${kind === 'video' ? ' and camera' : ''} access to call`); }
+  CALL.kind = kind; CALL.conv = c.id; CALL.role = 'caller'; CALL.connected = false;
+  callUI({ name: c.name, avatar: c.avatar }, kind, 'Calling…'); tone('back');
+  const pc = (CALL.pc = newPC()); CALL.local.getTracks().forEach((t) => pc.addTrack(t, CALL.local));
+  await pc.setLocalDescription(await pc.createOffer()); await gatherDone(pc);
+  if (!CALL.pc) return;
+  const { data: id, error } = await sb.rpc('start_call', { conv: c.id, call_kind: kind, sdp: pc.localDescription.toJSON() });
+  if (error) { cleanupCall(); return toast(callErr(error.message)); }
+  CALL.id = id; callStatus('Ringing…');
+  const { data: row } = await sb.from('rtc_calls').select('status,answer').eq('id', id).single();
+  if (row?.status === 'busy') { toast(c.name + ' is on another call'); return cleanupCall(); }
+  if (row?.status === 'accepted' && row.answer) onCallRow({ ...row, id, caller_id: S.me.id });
+  CALL.noAns = setTimeout(() => { if (CALL.id === id && !CALL.connected) { sb.rpc('end_call', { cid: id, how: 'missed' }); toast('No answer'); cleanupCall(); } }, 45000);
+}
+async function onCallRow(r) {
+  if (!r?.id) return;
+  if (r.callee_id === S.me.id && r.status === 'ringing' && !CALL.pc && !CALL.incoming && Date.now() - Date.parse(r.created_at) < 55000) return incomingCall(r);
+  if (CALL.incoming?.id === r.id && r.status !== 'ringing') { closeIncoming(); if (r.status === 'missed') toast('Missed call'); return; }
+  if (r.id !== CALL.id) return;
+  if (CALL.role === 'caller' && r.status === 'accepted' && r.answer && !CALL.pc?.remoteDescription) {
+    callStatus('Connecting…'); try { await CALL.pc.setRemoteDescription(r.answer); } catch (e) { console.warn(e); }
+  }
+  if (['declined', 'ended', 'missed', 'busy'].includes(r.status)) { if (CALL.pc) toast(r.status === 'declined' ? 'Call declined' : 'Call ended'); cleanupCall(); }
+}
+async function incomingCall(r) {
+  CALL.incoming = r;
+  const { data: p } = await sb.from('profiles').select('display_name,username,avatar_url').eq('id', r.caller_id).single();
+  if (CALL.incoming?.id !== r.id) return;
+  const peer = { name: nm(p), avatar: p?.avatar_url };
+  const ov = $(`<div class="callin"><div class="ctop">${av(peer.name, peer.avatar, 104)}<b>${esc(peer.name)}</b><span>${r.kind === 'video' ? '📹 Incoming video call' : '📞 Incoming voice call'}</span><small>MITRO</small></div>
+    <div class="cbar"><button class="end" id="dec" title="Decline">📞</button><button class="acc" id="acc" title="Answer">${r.kind === 'video' ? '📹' : '📞'}</button></div></div>`);
+  document.body.appendChild(ov); CALL.inUI = ov; tone('ring');
+  if (document.hidden && Notification?.permission === 'granted') navigator.serviceWorker?.ready.then((reg) => reg.showNotification(r.kind === 'video' ? '📹 Incoming video call' : '📞 Incoming voice call', { body: peer.name + ' is calling you', tag: 'call-' + r.id, requireInteraction: true, icon: peer.avatar || '/app/icon-192.png', data: { url: '/app/#call=' + r.id, type: 'call' } })).catch(() => {});
+  ov.querySelector('#dec').onclick = async () => { closeIncoming(); await sb.rpc('end_call', { cid: r.id, how: 'declined' }); };
+  ov.querySelector('#acc').onclick = () => answerCall(r, peer);
+  CALL.inTimer = setTimeout(() => { if (CALL.incoming?.id === r.id) { closeIncoming(); toast('Missed call from ' + peer.name); } }, Math.max(5000, 55000 - (Date.now() - Date.parse(r.created_at))));
+}
+function closeIncoming() { stopTone(); clearTimeout(CALL.inTimer); CALL.inUI?.remove(); CALL.inUI = null; CALL.incoming = null; }
+async function answerCall(r, peer) {
+  closeIncoming();
+  try { CALL.local = await getMedia(r.kind); } catch { toast(`Allow microphone${r.kind === 'video' ? ' and camera' : ''} access to answer`); await sb.rpc('end_call', { cid: r.id, how: 'declined' }); return; }
+  CALL.id = r.id; CALL.kind = r.kind; CALL.role = 'callee'; CALL.conv = r.conversation_id; CALL.connected = false;
+  callUI(peer, r.kind, 'Connecting…');
+  const pc = (CALL.pc = newPC()); CALL.local.getTracks().forEach((t) => pc.addTrack(t, CALL.local));
+  try {
+    await pc.setRemoteDescription(r.offer); await pc.setLocalDescription(await pc.createAnswer()); await gatherDone(pc);
+    const { error } = await sb.rpc('answer_call', { cid: r.id, sdp: pc.localDescription.toJSON() });
+    if (error) { toast(callErr(error.message)); cleanupCall(); }
+  } catch (e) { console.warn(e); toast('Could not connect the call'); hangup(); }
+}
+async function hangup() { const id = CALL.id; cleanupCall(); if (id) await sb.rpc('end_call', { cid: id, how: 'ended' }); }
+function cleanupCall() {
+  stopTone(); clearTimeout(CALL.noAns); clearInterval(CALL.tick);
+  try { CALL.local?.getTracks().forEach((t) => t.stop()); } catch {}
+  try { CALL.pc?.close(); } catch {}
+  CALL.ui?.remove(); Object.assign(CALL, { pc: null, id: null, role: null, local: null, ui: null, connected: false, tick: null });
+}
+async function openCallLink(id, decline) {
+  const { data: r } = await sb.from('rtc_calls').select('*').eq('id', id).maybeSingle();
+  if (!r || r.status !== 'ringing') return toast('This call has ended');
+  if (decline) return sb.rpc('end_call', { cid: id, how: 'declined' });
+  if (r.callee_id === S.me.id) incomingCall(r);
+}
+function handleLink(url) {
+  const h = new URL(url, location.href).hash; if (!h) return;
+  const call = h.match(/call=([0-9a-f-]{36})/), chat = h.match(/chat=([0-9a-f-]{36})/);
+  if (call || chat) history.replaceState(null, '', location.pathname);
+  if (call) openCallLink(call[1], /decline=1/.test(h));
+  else if (chat) { setTab('chats'); openById(chat[1]); }
+}
+
+// ---------- Hooks into the app ----------
+const _shell = shell;
+shell = function () {
+  _shell();
+  sb.channel('calls:' + S.me.id).on('postgres_changes', { event: '*', schema: 'public', table: 'rtc_calls' }, (p) => onCallRow(p.new)).subscribe();
+  enablePush(false); setTimeout(notifBanner, 1500);
+  handleLink(location.href);
+  // a call that started while the app was closed
+  sb.from('rtc_calls').select('*').eq('callee_id', S.me.id).eq('status', 'ringing').gt('created_at', new Date(Date.now() - 50000).toISOString()).order('created_at', { ascending: false }).limit(1)
+    .then(({ data }) => { if (data?.[0]) onCallRow(data[0]); });
+};
+navigator.serviceWorker?.addEventListener('message', (e) => { if (e.data?.mitroOpen) handleLink(e.data.mitroOpen); });
+window.addEventListener('hashchange', () => { if (S.me) handleLink(location.href); });
+
+const _setTab = setTab;
+setTab = function (t) { _setTab(t); if (t === 'chats') setTimeout(notifBanner, 50); };
+
+const _openChat = openChat;
+openChat = async function (c) {
+  const p = _openChat(c);
+  if (isDM(c)) {
+    const sr = root.querySelector('#main #sr');
+    if (sr && !root.querySelector('#cvoice')) {
+      sr.insertAdjacentHTML('beforebegin', '<button class="ic" id="cvoice" title="Voice call">📞</button><button class="ic" id="cvideo" title="Video call">📹</button>');
+      root.querySelector('#cvoice').onclick = () => startCall('voice');
+      root.querySelector('#cvideo').onclick = () => startCall('video');
+    }
+  }
+  return p;
+};
+
+// ---------- Start ----------
+sb.auth.onAuthStateChange((_e, session) => {
+  const u = session?.user || null; if (u?.id === S.me?.id && root.childElementCount) return;
+  S.me = u; S.cur = null; if (location.hash.includes('access_token')) history.replaceState(null, '', location.pathname);
+  if (S.me) gate().then(deepLink); else signIn();
+});
+</script><script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/app/sw.js',{scope:'/app/'}).catch(()=>{}));</script></body></html>

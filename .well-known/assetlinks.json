@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.mitroworld.app",
+      "sha256_cert_fingerprints": [
+        "85:7F:53:93:9F:ED:36:7B:39:CE:F7:B7:E9:88:D1:B8:A7:C0:20:30:D1:BA:84:2D:F4:38:49:25:A1:FE:05:A3"
+      ]
+    }
+  }
+]
